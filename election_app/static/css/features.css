@@ -48,13 +48,19 @@
 }
 
 .feature-item {
-  left: 141px;
-  position: absolute;
+  display: flex; /* Aligne icône et texte sur une ligne */
+  align-items: center; /* Centre verticalement l'icône et le texte */
+  margin-bottom: 40px; /* Espacement entre chaque élément */
   color: #010029;
-  font-size: 25px;
+  font-size: 30px; /* Taille du texte ajustée */
   font-family: "DM Serif Display", serif;
   font-weight: 400;
-  word-wrap: break-word;
+}
+
+.feature-icon {
+  width: 100px; /* Augmente la largeur des icônes */
+  height: 100px; /* Augmente la hauteur des icônes */
+  margin-right: 15px; /* Espacement entre l'icône et le texte */
 }
 
 .feature-item:nth-child(1) { top: 10px; }
@@ -63,41 +69,3 @@
 .feature-item:nth-child(4) { top: 389px; }
 .feature-item:nth-child(5) { top: 516px; }
 .feature-item:nth-child(6) { top: 640px; }
-
-.icon {
-  width: 83px;
-  height: 74px;
-  left: 0;
-  top: 0;
-  position: absolute;
-}
-
-.icon-box {
-  width: 73.12px;
-  height: 74px;
-  padding-left: 13.95px;
-  padding-right: 13.95px;
-  left: 4.94px;
-  top: 133px;
-  position: absolute;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.vertical-line {
-  width: 45.22px;
-  height: 74px;
-  background: #010029;
-}
-
-.feature-icon {
-  width: 72.13px;
-  height: 73px;
-  position: absolute;
-}
-
-.feature-icon:nth-child(1) { left: 4.94px; top: 262px; }
-.feature-icon:nth-child(2) { left: 3.95px; top: 379px; }
-.feature-icon:nth-child(3) { left: 4.94px; top: 507px; }
-.feature-icon:nth-child(4) { left: 4.94px; top: 630px; }

@@ -6,26 +6,30 @@
 
 {% endblock %}
 {% block content %}
-<div class="container">
-  <div class="feature-box">
-    <div class="rotate-line"></div>
-    <div class="title">Features</div>
-    <div class="feature-list">
-      <div class="feature-item">Secured by 256 bit encryption</div>
-      <div class="feature-item">Backed by ethereum based technology</div>
-      <div class="feature-item">Verifiable transactions</div>
-      <div class="feature-item">Easy to use</div>
-      <div class="feature-item">Cheaper than ballot voting system</div>
-      <div class="feature-item">Faster voting process</div>
-      <img class="icon" src="https://via.placeholder.com/83x74" />
-      <div class="icon-box">
-        <div class="vertical-line"></div>
-      </div>
-      <img class="feature-icon" src="https://via.placeholder.com/72x73" />
-      <img class="feature-icon" src="https://via.placeholder.com/74x75" />
-      <img class="feature-icon" src="https://via.placeholder.com/72x73" />
-      <img class="feature-icon" src="https://via.placeholder.com/73x74" />
+    <div class="container">
+        <div class="feature-box">
+            <div class="rotate-line"></div>
+            <div class="title">Features</div>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <img class="feature-icon" src="{% static 'icons/Lock.svg' %}" alt=""/> Secured by 256 bit encryption
+                </div>
+                <div class="feature-item">
+                    <img class="feature-icon" src="{% static 'icons/Approved_Delivery.svg' %}" alt=""/> Verifiable
+                    transactions
+                </div>
+                <div class="feature-item">
+                    <img class="feature-icon" src="{% static 'icons/Hand_Cursor.svg' %}" alt=""/> Easy to use
+                </div>
+                <div class="feature-item">
+                    <img class="feature-icon" src="{% static 'icons/Low_Price.svg' %}" alt=""/> Cheaper than ballot
+                    voting system
+                </div>
+                <div class="feature-item">
+                    <img class="feature-icon" src="{% static 'icons/Time_Span.svg' %}" alt=""/> Faster voting process
+                </div>
+            </div>
+
+        </div>
     </div>
-  </div>
-</div>
 {% endblock %}
