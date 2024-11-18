@@ -1,0 +1,134 @@
+.login-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    padding-top: 50px; /* Ajoute un espace de 50px en haut */
+    box-sizing: border-box; /* Assure que le padding n'affecte pas la hauteur */
+}
+
+
+.content {
+    display: flex;
+    width: 90%;
+    max-width: 1300px;
+    height: auto;
+    align-items: center;
+    justify-content: space-between;
+    gap: 100px; /* Espacement plus grand entre l'image et le formulaire */
+}
+
+/* Section gauche : Image */
+.left-section {
+    flex: 2; /* Augmenter la taille de l'image */
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Aligner l'image à gauche */
+    margin-right: 50px; /* Ajouter de l'espace entre l'image et le formulaire */
+}
+
+.login-image {
+    width: 100%; /* L'image prend toute la largeur disponible */
+    max-width: 900px; /* Augmenter la largeur maximale de l'image */
+    height: auto;
+}
+
+/* Section droite : Formulaire */
+.right-section {
+    flex: 1; /* Réduire la taille de la section formulaire */
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-left: 50px;
+    padding-top: 50px;
+}
+
+.login-box-1 {
+    width: 363px;
+    height: 374px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.login-title {
+    color: white;
+    font-size: 45px;
+    font-family: DM Serif Display;
+    font-weight: 400;
+}
+
+.email-label, .password-label, .forgot-password, .register-text {
+    color: white;
+    font-size: 20px;
+    font-family: Padauk;
+    font-weight: 400;
+}
+
+.email-input, .password-input {
+    width: 100%;
+    height: 43px;
+    background: white;
+    margin-bottom: 20px;
+}
+
+.login-button-2 {
+    width: 180px;
+    height: 43px;
+    background: #015FC7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.button-text {
+    color: white;
+    font-size: 20px;
+    font-family: Padauk;
+    font-weight: 700;
+
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .content {
+        flex-direction: column;
+        gap: 0;
+    }
+    .left-section, .right-section {
+        flex: none;
+        width: 100%;
+    }
+    .login-image {
+        width: 100%;
+        max-width: 600px; /* Réduire la largeur de l'image sur petit écran */
+    }
+    .login-box-1 {
+        width: 100%; /* Formulaire prend toute la largeur sur petits écrans */
+        max-width: 400px; /* Largeur maximale du formulaire sur petits écrans */
+    }
+}
+.register-now {
+    color: #499FFE; /* Couleur par défaut du texte */
+    font-size: 20px;
+    font-family: Padauk;
+    font-weight: 400;
+    text-decoration: none; /* Retirer la soulignure */
+    margin-left: 5px; /* Espacement entre les deux parties du texte */
+    outline: none; /* Supprimer le contour (focus) */
+    border: none; /* Supprimer toute bordure */
+}
+
+.register-now:hover {
+    color: blue; /* Couleur du texte au survol */
+}
+
+/* Ajouter une règle globale pour éviter les bordures ou outline sur tous les liens */
+a:focus, a:hover {
+    outline: none; /* Retirer l'outline (trait de focus) */
+    border: none; /* Retirer toute bordure */
+}
+

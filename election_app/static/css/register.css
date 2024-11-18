@@ -1,0 +1,95 @@
+/* Styles pour la page d'inscription */
+.registration-container {
+  width: 100%;
+  height: 100vh;
+  background-color: #001124;
+  display: flex;
+  justify-content: flex-end;  /* Aligner à droite */
+  align-items: center;
+  padding: 0 20px;  /* Espace sur les côtés */
+  box-sizing: border-box;
+}
+
+.registration-box {
+  width: 500px;
+  padding: 30px;
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 50px;  /* Marge pour éviter d'être collé au haut */
+  margin-bottom: 50px;  /* Marge pour éviter d'être collé au bas */
+  position: relative;  /* Nécessaire pour positionner par rapport à l'élément parent */
+}
+
+h2 {
+  text-align: center;
+  color: #2F2E41;
+  font-size: 24px;
+  font-family: 'Arial', sans-serif;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 16px;
+  color: #2F2E41;
+  font-family: 'Arial', sans-serif;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #015FC7;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 15px;
+  font-size: 18px;
+  color: white;
+  background-color: #015FC7;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+  background-color: #013F92;
+}
+
+.submit-button:active {
+  background-color: #012B6D;
+}
+
+/* Media query pour petits écrans */
+@media (max-width: 600px) {
+  .registration-box {
+    width: 90%;
+    padding: 15px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  .form-group input {
+    font-size: 14px;
+  }
+
+  .submit-button {
+    font-size: 16px;
+  }
+}

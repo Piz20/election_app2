@@ -1,0 +1,37 @@
+{% extends 'election_app/base.html' %}
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="login-container">
+        <div class="content">
+            <!-- Section gauche : Image -->
+            <div class="left-section">
+                <img class="login-image" src="{% static 'images/login.png' %}" alt="Login Illustration">
+            </div>
+
+            <!-- Section droite : Formulaire -->
+            <div class="right-section">
+                <div class="login-box-1">
+                    <div class="login-title">Login</div>
+                    <div class="email-label">Email</div>
+                    <div class="email-input"></div>
+                    <div class="password-label">Password</div>
+                    <div class="password-input"></div>
+                    <div class="forgot-password">Forgot Password?</div>
+                    <div class="register-text">
+                        <span class="not-a-user">Not a user? </span>
+
+                        <span> <a class="register-now" href="/register">Register now</a></span>
+
+                    </div>
+                    <div class="login-button-2">
+                        <div class="button-background"></div>
+                        <div class="button-text">LOGIN</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

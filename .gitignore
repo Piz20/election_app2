@@ -1,0 +1,33 @@
+# Environnement virtuel
+venv/
+env/
+
+# Fichiers de configuration
+*.env
+
+# Fichiers de compilation Python
+__pycache__/
+*.py[cod]
+
+# Migrations Django
+**/migrations/
+
+# Fichiers de base de données locale
+db.sqlite3
+db.sqlite3-journal
+
+# Fichiers statiques générés
+staticfiles/
+media/
+
+# Autres fichiers et dossiers ignorés par convention
+*.log
+*.pot
+*.pyc
+*.pyo
+.DS_Store
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+node_modules/

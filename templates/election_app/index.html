@@ -1,0 +1,44 @@
+{% extends 'election_app/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="content">
+            <!-- Left Section: Image -->
+            <div class="left-section">
+                <img class="main-image" src="{% static 'images/lets_vote.svg' %}" alt="Main Image">
+            </div>
+
+            <!-- Right Section: Text and Buttons -->
+            <div class="right-section">
+                <div class="text-box">
+                    <div class="title">
+                        <div class="line1">Make Your Voice Heard in the Elections</div>
+<div class="line2" id="typing-effect">Vote Today</div>
+
+                    </div>
+                    <div class="buttons">
+                        <a href="/register" class="button-text">
+                            <div class="button register">
+                                Register
+                            </div>
+                        </a>
+                        <a href="/features/" class="button-text">
+                            <div class="button read-more">
+                                Read More
+                            </div>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}

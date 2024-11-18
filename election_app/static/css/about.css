@@ -1,0 +1,68 @@
+/* Style CSS pour la page About */
+
+.about-container {
+    width: 1440px;
+    height: 1024px;
+    padding-top: 178px;
+    padding-bottom: 178px;
+    padding-left: 147px;
+    padding-right: 148px;
+    background: #001124;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.about-content {
+    width: 1145px;
+    height: 668px;
+    position: relative;
+}
+
+.rotate-text {
+    width: 668px;
+    height: 0px;
+    left: 175px;
+    top: 668px;
+    position: absolute;
+    transform: rotate(-90deg);
+    transform-origin: 0 0;
+    background: white;
+    border: 7px solid white;
+}
+
+.about-title {
+    left: 0px;
+    top: 490px;
+    position: absolute;
+    transform: rotate(-90deg);
+    transform-origin: 0 0;
+    color: white;
+    font-size: 115px;
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    word-wrap: break-word;
+    transition: transform 0.3s ease;
+}
+
+.about-title:hover {
+    transform: rotate(-90deg) scale(1.1);
+}
+
+.about-text {
+    width: 924px;
+    left: 221px;
+    top: 21px;
+    position: absolute;
+    text-align: justify;
+    color: white;
+    font-size: 40px;
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    word-wrap: break-word;
+    transition: transform 0.3s ease;
+}
+
+.about-text:hover {
+    transform: scale(1.05);
+}
