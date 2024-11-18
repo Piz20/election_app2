@@ -3,13 +3,17 @@
 {% block title %}Inscription{% endblock %}
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/register.css' %}">
-
 {% endblock %}
 {% block content %}
-<div class="registration-container" style="background-color: #001124; padding: 50px;">
+<div class="registration-container">
+    <!-- Section gauche pour l'image -->
+    <div class="left-section">
+        <img src="{% static 'images/register.png' %}" alt="Illustration" class="registration-image">
+    </div>
 
-    <div class="registration-box" style="background-color: #FFFFFF; padding: 20px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-        <h2 style="text-align: center; color: #2F2E41;">Formulaire d'inscription</h2>
+    <!-- Section droite pour le formulaire -->
+    <div class="registration-box">
+        <h2>Formulaire d'inscription</h2>
 
         <!-- Formulaire d'inscription -->
         <form method="post">
@@ -61,5 +65,4 @@
         </form>
     </div>
 </div>
-
 {% endblock %}
