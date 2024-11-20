@@ -1,0 +1,52 @@
+.container {
+    display: flex;
+    justify-content: center; /* Centrer la boîte globalement */
+    align-items: center;
+    height: 100vh;
+}
+
+.steps-box {
+    width: 80%; /* Légèrement plus large pour s'adapter aux éléments plus grands */
+    padding: 40px; /* Augmenté pour plus d'espace autour du contenu */
+    background-color: transparent; /* Suppression de l'arrière-plan */
+    box-shadow: none; /* Suppression des ombres */
+    border-radius: 0; /* Suppression des coins arrondis */
+}
+
+.divider-line {
+    height: 5px; /* Diviseur plus épais */
+    background-color: #007bff;
+    margin: 40px 0; /* Espace plus grand autour du diviseur */
+}
+
+.steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 40px; /* Augmenté pour un espacement plus large entre les étapes */
+}
+
+.step-item {
+    display: flex;
+    align-items: center;
+}
+
+.step-image {
+    width: 100px; /* Taille de l'image encore plus grande */
+    height: 100px;
+    margin-right: 30px; /* Plus d'espace entre l'image et le texte */
+}
+
+.step-description {
+    font-size: 26px; /* Taille du texte augmentée pour une meilleure lisibilité */
+    color: #333;
+    text-align: left;
+    line-height: 1.6; /* Plus d'espace entre les lignes pour un meilleur confort visuel */
+}
+
+.title {
+    font-size: 40px; /* Augmentation significative de la taille du titre */
+    font-weight: bold; /* Ajout d'une graisse plus épaisse pour rendre le titre plus visible */
+    color: #333;
+    text-align: left;
+    margin-bottom: 20px; /* Espacement sous le titre pour le séparer du reste */
+}

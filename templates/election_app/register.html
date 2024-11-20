@@ -1,68 +1,157 @@
 {% extends "election_app/base.html" %}
 {% load static %}
-{% block title %}Inscription{% endblock %}
+{% block title %}Registration{% endblock %}
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/register.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 {% endblock %}
 {% block content %}
 <div class="registration-container">
-    <!-- Section gauche pour l'image -->
+    <!-- Left section for the image -->
     <div class="left-section">
         <img src="{% static 'images/register.png' %}" alt="Illustration" class="registration-image">
     </div>
 
-    <!-- Section droite pour le formulaire -->
+    <!-- Right section for the form -->
     <div class="registration-box">
-        <h2>Formulaire d'inscription</h2>
+        <h2>Registration Form</h2>
 
-        <!-- Formulaire d'inscription -->
+        <!-- Display messages (success or error) -->
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <p class="message {{ message.tags }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Registration Form -->
         <form method="post">
             {% csrf_token %}
             
+            <!-- Full Name Field -->
             <div class="form-group">
-                <label for="name">Nom complet:</label>
-                <input type="text" id="name" name="name" placeholder="Entrez votre nom" required>
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" name="name" placeholder="Enter your full name" value="{{ request.POST.name }}" required>
+                {% if form.name.errors %}
+                    <div class="error-list">
+                        {% for error in form.name.errors %}
+                            <p class="error-message">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
 
+            <!-- Matricule Field -->
             <div class="form-group">
-                <label for="dob">Date de naissance:</label>
-                <input type="date" id="dob" name="dob" required>
+                <label for="matricule">Matricule:</label>
+                <input type="text" id="matricule" name="matricule" placeholder="Enter your matricule" value="{{ request.POST.matricule }}" required>
+                {% if form.matricule.errors %}
+                    <div class="error-list">
+                        {% for error in form.matricule.errors %}
+                            <p class="error-message">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
 
+            <!-- Gender Field -->
             <div class="form-group">
-                <label for="parents_name">Nom du père/de la mère:</label>
-                <input type="text" id="parents_name" name="parents_name" placeholder="Entrez le nom de vos parents" required>
+                <label for="gender">Gender:</label>
+                <select id="gender" name="gender" required>
+                    <option value="" disabled {% if not request.POST.gender %}selected{% endif %}>Select your gender</option>
+                    <option value="M" {% if request.POST.gender == "M" %}selected{% endif %}>Male</option>
+                    <option value="F" {% if request.POST.gender == "F" %}selected{% endif %}>Female</option>
+                </select>
+                {% if form.gender.errors %}
+                    <div class="error-list">
+                        {% for error in form.gender.errors %}
+                            <p class="error-message">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
 
+            <!-- Date of Birth Field -->
+            <div class="form-group">
+                <label for="dob">Date of Birth:</label>
+                <input type="date" id="dob" name="dob" value="{{ request.POST.dob }}" required>
+                {% if form.dob.errors %}
+                    <div class="error-list">
+                        {% for error in form.dob.errors %}
+                            <p class="error-message">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Email Field -->
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" id="email" name="email" placeholder="Entrez votre email" required>
+                <input type="email" id="email" name="email" placeholder="Enter your email" value="{{ request.POST.email }}" required>
+                {% if form.email.errors %}
+                    <div class="error-list">
+                        {% for error in form.email.errors %}
+                            <p class="error-message">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
 
+            <!-- Password Field -->
             <div class="form-group">
-                <label for="phone">Numéro de téléphone:</label>
-                <input type="tel" id="phone" name="phone" placeholder="Entrez votre numéro" required>
+                <label for="password">Password:</label>
+                <div class="password-container">
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <button type="button" class="toggle-button" onclick="togglePassword('password', this)">
+                        <i class="fa fa-eye"></i>
+                    </button>
+                </div>
+                {% if form.password.errors %}
+                    <div class="error-list">
+                        {% for error in form.password.errors %}
+                            <p class="error-message">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
 
+            <!-- Confirm Password Field -->
             <div class="form-group">
-                <label for="password">Mot de passe:</label>
-                <input type="password" id="password" name="password" placeholder="Entrez votre mot de passe" required>
+                <label for="password_confirm">Confirm Password:</label>
+                <div class="password-container">
+                    <input type="password" id="password_confirm" name="password_confirm" placeholder="Confirm your password" required>
+                    <button type="button" class="toggle-button" onclick="togglePassword('password_confirm', this)">
+                        <i class="fa fa-eye"></i>
+                    </button>
+                </div>
+                {% if form.password_confirm.errors %}
+                    <div class="error-list">
+                        {% for error in form.password_confirm.errors %}
+                            <p class="error-message">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
 
+            <!-- Submit Button -->
             <div class="form-group">
-                <label for="password_confirm">Confirmer le mot de passe:</label>
-                <input type="password" id="password_confirm" name="password_confirm" placeholder="Confirmez votre mot de passe" required>
-            </div>
-
-            <div class="form-group">
-                <label for="aadhar_number">Numéro Aadhar:</label>
-                <input type="text" id="aadhar_number" name="aadhar_number" placeholder="Entrez votre numéro Aadhar" required>
-            </div>
-
-            <div class="form-group" style="text-align: center;">
-                <button type="submit" class="submit-button">Soumettre</button>
+                <button type="submit" class="submit-button">Register</button>
             </div>
         </form>
     </div>
 </div>
+
+<!-- JavaScript -->
+<script>
+    function togglePassword(fieldId, button) {
+        const field = document.getElementById(fieldId);
+        const isPassword = field.getAttribute('type') === 'password';
+        const icon = button.querySelector('i');
+
+        field.setAttribute('type', isPassword ? 'text' : 'password');
+        icon.classList.toggle('fa-eye');
+        icon.classList.toggle('fa-eye-slash');
+    }
+</script>
 {% endblock %}

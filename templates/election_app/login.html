@@ -1,37 +1,90 @@
-{% extends 'election_app/base.html' %}
+{% extends "election_app/base.html" %}
 {% load static %}
 {% block extra_css %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 {% endblock %}
+
 {% block content %}
-    <div class="login-container">
-        <div class="content">
-            <!-- Section gauche : Image -->
-            <div class="left-section">
-                <img class="login-image" src="{% static 'images/login.png' %}" alt="Login Illustration">
-            </div>
+<div class="login-container">
+    <div class="content">
+        <!-- Section gauche : Image -->
+        <div class="left-section">
+            <img class="login-image" src="{% static 'images/login.png' %}" alt="Login Illustration">
+        </div>
 
-            <!-- Section droite : Formulaire -->
-            <div class="right-section">
-                <div class="login-box-1">
-                    <div class="login-title">Login</div>
-                    <div class="email-label">Email</div>
-                    <div class="email-input"></div>
-                    <div class="password-label">Password</div>
-                    <div class="password-input"></div>
-                    <div class="forgot-password">Forgot Password?</div>
-                    <div class="register-text">
-                        <span class="not-a-user">Not a user? </span>
+        <!-- Section droite : Formulaire -->
+        <div class="right-section">
+            <form method="post" action="/login/">
+                {% csrf_token %}
 
-                        <span> <a class="register-now" href="/register">Register now</a></span>
+                <h2 class="login-title">Login</h2>
 
-                    </div>
-                    <div class="login-button-2">
-                        <div class="button-background"></div>
-                        <div class="button-text">LOGIN</div>
+                <!-- Email Field -->
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" required>
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <div class="password-container">
+                        <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
+                        <button type="button" class="eye-button" onclick="togglePassword()">
+                            <i id="eye-icon" class="fas fa-eye"></i>
+                        </button>
                     </div>
                 </div>
-            </div>
+
+                <!-- Forgot Password Link -->
+                <div class="form-group">
+                    <a href="#" class="forgot-password">Forgot Password?</a>
+                </div>
+
+                <!-- Register Link -->
+                <div class="form-group register-text">
+                    <span class="not-a-user">Not a user? </span>
+                    <a class="register-now" href="/register">Register now</a>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-group">
+                    <button type="submit" class="submit-button">LOGIN</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- SweetAlert2 CDN -->
+
+<script>
+    // Function to toggle password visibility
+    function togglePassword() {
+        const passwordInput = document.getElementById("password");
+        const eyeIcon = document.getElementById("eye-icon");
+
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            eyeIcon.classList.remove("fa-eye");
+            eyeIcon.classList.add("fa-eye-slash");
+        } else {
+            passwordInput.type = "password";
+            eyeIcon.classList.remove("fa-eye-slash");
+            eyeIcon.classList.add("fa-eye");
+        }
+    }
+
+    // Display error messages using SweetAlert2
+    {% if messages %}
+        {% for message in messages %}
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: '{{ message }}',
+            });
+        {% endfor %}
+    {% endif %}
+</script>
 {% endblock %}

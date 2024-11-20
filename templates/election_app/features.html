@@ -1,35 +1,80 @@
 {% extends "election_app/base.html" %}
 {% load static %}
-{% block title %}Inscription{% endblock %}
+{% block title %}Features{% endblock %}
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/features.css' %}">
 
 {% endblock %}
 {% block content %}
     <div class="container">
-        <div class="feature-box">
-            <div class="rotate-line"></div>
-            <div class="title">Features</div>
-            <div class="feature-list">
-                <div class="feature-item">
-                    <img class="feature-icon" src="{% static 'icons/Lock.svg' %}" alt=""/> Secured by 256 bit encryption
-                </div>
-                <div class="feature-item">
-                    <img class="feature-icon" src="{% static 'icons/Approved_Delivery.svg' %}" alt=""/> Verifiable
-                    transactions
-                </div>
-                <div class="feature-item">
-                    <img class="feature-icon" src="{% static 'icons/Hand_Cursor.svg' %}" alt=""/> Easy to use
-                </div>
-                <div class="feature-item">
-                    <img class="feature-icon" src="{% static 'icons/Low_Price.svg' %}" alt=""/> Cheaper than ballot
-                    voting system
-                </div>
-                <div class="feature-item">
-                    <img class="feature-icon" src="{% static 'icons/Time_Span.svg' %}" alt=""/> Faster voting process
-                </div>
+    <div class="feature-box">
+        <div class="rotate-line"></div>
+        <div class="title">Features</div>
+        <div class="feature-list">
+            <div class="feature-item">
+                <img class="feature-icon" src="{% static 'icons/lock.svg' %}" alt="" /> Secured by 256 bit encryption
             </div>
-
+            <div class="feature-item">
+                <img class="feature-icon" src="{% static 'icons/approved_delivery.svg' %}" alt="" /> Verifiable
+                transactions
+            </div>
+            <div class="feature-item">
+                <img class="feature-icon" src="{% static 'icons/hand_cursor.svg' %}" alt="" /> Easy to use
+            </div>
+            <div class="feature-item">
+                <img class="feature-icon" src="{% static 'icons/low_price.svg' %}" alt="" /> Cheaper than ballot
+                voting system
+            </div>
+            <div class="feature-item">
+                <img class="feature-icon" src="{% static 'icons/time_span.svg' %}" alt="" /> Faster voting process
+            </div>
         </div>
     </div>
+
+    <!-- Overlay sombre -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Flèche interactive -->
+    <div class="slide-arrow" id="toggleButton">
+        ➤
+    </div>
+
+    <!-- Contenu déroulant -->
+    <div class="slide-panel" id="slidePanel">
+        <iframe src="{% url 'help' %}" class="slide-content"></iframe>
+    </div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleButton = document.getElementById("toggleButton");
+        const slidePanel = document.getElementById("slidePanel");
+        const overlay = document.getElementById("overlay");
+
+        let isOpen = false;
+
+        toggleButton.addEventListener("click", () => {
+            if (isOpen) {
+                slidePanel.style.right = "-70%";
+                overlay.classList.remove("active");
+                toggleButton.textContent = "➤";
+            } else {
+                slidePanel.style.right = "0";
+                overlay.classList.add("active");
+                toggleButton.textContent = "➣";
+            }
+            isOpen = !isOpen;
+        });
+
+        // Fermer le panneau si l'overlay est cliqué
+        overlay.addEventListener("click", () => {
+            if (isOpen) {
+                slidePanel.style.right = "-70%";
+                overlay.classList.remove("active");
+                toggleButton.textContent = "➤";
+                isOpen = false;
+            }
+        });
+    });
+</script>
+
 {% endblock %}

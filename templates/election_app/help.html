@@ -1,10 +1,41 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help</title>
+    <link rel="stylesheet" href="{% static 'css/help.css' %}">
 </head>
 <body>
+<div class="container">
+    <div class="steps-box">
+        <div class="title">Follow these easy steps</div>
+        <!-- Divider bleu ajouté ici -->
+        <div class="divider-line"></div>
+        <div class="steps-list">
+            <div class="step-item">
+                <img class="step-image" src="{% static 'icons/registration.png' %}" alt="Step 1 Icon"/>
+                <div class="step-description">Register yourself by filling the required informations</div>
+            </div>
+            <div class="step-item">
+                <img class="step-image" src="{%  static 'icons/login.svg' %}" alt="Step 2 Icon"/>
 
+                <div class="step-description">Signin as user</div>
+            </div>
+            <div class="step-item">
+                <img class="step-image" src="{% static 'icons/window.png' %}" alt="Step 3 Icon"/>
+                <div class="step-description">Go to vote option on dashboard</div>
+            </div>
+
+            <div class="step-item">
+                <img class="step-image" src="{% static 'icons/approved_vote.svg' %}" alt="Step 2 Icon"/>
+
+                <div class="step-description">Vote your candidate and submit</div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

@@ -51,6 +51,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'election_app.urls'
@@ -136,3 +137,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # settings.py
 
 AUTH_USER_MODEL = 'election_app.CustomUser'
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+# settings.py
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
