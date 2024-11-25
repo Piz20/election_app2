@@ -46,6 +46,6 @@ urlpatterns = [
                   path('create_election/', views.create_election_view, name='create_election'),
                   path('election/<int:election_id>/', views.election_details_view, name='election_details'),
                   path('election/<int:election_id>/add-candidate/', views.add_candidate_view, name='add_candidate'),
-
+                  path('election/<int:election_id>/vote/<int:candidate_id>/', views.vote_view, name='vote'),
                   path('help/', views.help_view, name='help'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

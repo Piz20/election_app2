@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, Election, Candidate
+from .models import CustomUser, Election, Candidate, Vote
+
 
 # Custom User Admin
 class CustomUserAdmin(UserAdmin):
@@ -37,6 +38,23 @@ class CandidateAdmin(admin.ModelAdmin):
     list_filter = ('election',)
     ordering = ('election', 'name')
 
+
+class VoteAdmin(admin.ModelAdmin):
+    # Définir les champs à afficher dans la liste des votes
+    list_display = ('user', 'candidate',)
+
+    # Ajouter des filtres dans la barre latérale pour filtrer les votes
+    list_filter = ('candidate__election', 'user')
+
+    # Ajouter une barre de recherche pour rechercher par utilisateur ou candidat
+    search_fields = ('user__email', 'candidate__name')
+
+    # Autoriser l'édition des votes directement depuis la liste
+    list_editable = ('candidate',)
+
+
+# Enregistrer le modèle avec la classe d'administration personnalisée
+admin.site.register(Vote, VoteAdmin)
 # Register models
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Election, ElectionAdmin)

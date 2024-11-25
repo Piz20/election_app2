@@ -59,9 +59,12 @@
 /* Texte des cartes */
 .card-text {
     font-size: 25px;
-    max-width: 15px;
-    text-overflow: ellipsis; /* Ajoute les points de suspension */
+    max-width: 25%;  /* Vous pouvez ajuster cette valeur selon la largeur de la carte */
+    white-space: nowrap; /* Empêche le texte de se diviser en plusieurs lignes */
+    overflow: hidden; /* Cache tout texte qui dépasse */
+    text-overflow: ellipsis; /* Ajoute les trois points de suspension */
 }
+
 
 .card-date {
     font-size: 25px;

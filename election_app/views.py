@@ -153,23 +153,23 @@ def create_election_view(request):
 
 @login_required
 def election_details_view(request, election_id):
-    # Récupérer l'élection ou retourner une erreur 404 si non trouvée
     election = get_object_or_404(Election, id=election_id)
-
-    # Récupérer les candidats liés à l'élection
     candidates = Candidate.objects.filter(election=election)
 
-    # Obtenir la date et l'heure actuelles
-    current_time = timezone.localtime(timezone.now())  # Heure locale (avec fuseau horaire du Cameroun, si configuré)
+    # Obtenir les votes de l'utilisateur pour cette élection
+    existing_votes = Vote.objects.filter(user=request.user, candidate__election=election)
 
-    # Transmettre les données à la vue
+    # Créer un dictionnaire indiquant si l'utilisateur a voté pour un candidat
+    has_voted = {vote.candidate.id: True for vote in existing_votes}
+
     context = {
         'election': election,
         'candidates': candidates,
-        'now': current_time,  # Ajouter l'heure actuelle au contexte
+        'now': timezone.localtime(timezone.now()),
+        'has_voted': has_voted,  # Passer les informations sur les votes existants
     }
-    return render(request, 'election_app/election_details.html', context)
 
+    return render(request, 'election_app/election_details.html', context)
 
 @login_required
 def add_candidate_view(request, election_id):
@@ -183,12 +183,81 @@ def add_candidate_view(request, election_id):
             candidate.save()  # Sauvegarder le candidat
             return JsonResponse({"success": True, "message": "Candidate added successfully!"})
         else:
-            # Affichage des erreurs dans la console
-            print(f"Errors: {form.errors}")
+
             return JsonResponse(
                 {"success": False, "errors": form.errors, "message": "Please correct the errors in the form."})
     else:
         return JsonResponse({"success": False, "message": "Invalid request method."})
+
+@login_required
+def vote_view(request, election_id, candidate_id):
+    """
+    Handles the voting process for an election.
+    """
+
+    # Retrieve the election using the ID from the URL
+    election = get_object_or_404(Election, id=election_id)
+
+    # Retrieve the candidate and ensure they belong to the election
+    candidate = get_object_or_404(Candidate, id=candidate_id, election=election)
+
+    # Check if the user has already voted in this election
+    existing_vote = Vote.objects.filter(user=request.user, candidate__election=election).first()
+
+    # Pass the previous candidate name if the user has already voted
+    previous_candidate_name = None
+    if existing_vote:
+        previous_candidate_name = existing_vote.candidate.name  # Adjust according to your model field
+
+    # Your voting logic as before
+
+    if request.method == 'POST':
+        try:
+            if existing_vote:
+                # If the user has already voted, check if they are voting for the same candidate
+                previous_candidate = existing_vote.candidate
+
+                if previous_candidate != candidate:
+                    # If the user is changing their vote, decrease the vote count of the previous candidate
+                    previous_candidate.vote_count -= 1
+                    previous_candidate.save()
+
+                    # Update the existing vote to the new candidate
+                    existing_vote.candidate = candidate
+                    existing_vote.save()
+
+                    # Increase the vote count of the new candidate
+                    candidate.vote_count += 1
+                    candidate.save()
+
+                    return JsonResponse({'success': True, 'message': 'Your vote has been updated successfully.'})
+                else:
+                    # If the user selected the same candidate, no changes to vote count
+                    return JsonResponse({'success': True, 'message': 'You have already voted for this candidate.'})
+
+            else:
+                # If the user hasn't voted, create a new vote
+                Vote.objects.create(user=request.user, candidate=candidate)
+
+                # Increase the vote count of the selected candidate
+                candidate.vote_count += 1
+                candidate.save()
+
+                return JsonResponse({'success': True, 'message': 'Your vote has been recorded successfully.'})
+
+        except Exception as e:
+            # Clean up the error message to remove any unwanted characters like quotes or brackets
+            error_message = str(e).replace("'", "").replace("[", "").replace("]", "")
+
+            # Capture and return the cleaned error message
+            return JsonResponse({'success': False, 'error': error_message}, status=400)
+
+    # Pass the previous candidate name to the template context
+    return render(request, 'election_app/election_details.html', {
+        'election': election,
+        'candidate': candidate,
+        'previous_candidate_name': previous_candidate_name,  # Include the previous candidate's name
+    })
 
 
 

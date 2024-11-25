@@ -54,6 +54,98 @@ function updateCountdown() {
 setInterval(updateCountdown, 1000);
 updateCountdown(); // Initialiser immédiatement le compte à rebours
 
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('createCandidateForm');
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Empêcher la soumission traditionnelle du formulaire
+
+        const formData = new FormData(form);
+
+        // Envoi du formulaire avec AJAX
+        fetch(formActionUrl, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': document.querySelector('[name="csrfmiddlewaretoken"]').value, // Ajout du token CSRF
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Affiche un message de succès si la soumission est réussie
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Candidate added successfully!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    // Rafraîchissez la page ou la section des candidats
+                    location.reload(); // Cela recharge la page complète
+                });
+            } else {
+                // Si la soumission échoue, affiche un message d'erreur
+                if (data.errors) {
+                    // Loop through the form errors and display them
+                    Object.keys(data.errors).forEach(field => {
+                        const errorContainer = document.getElementById(`error-${field}`);
+                        if (errorContainer) {
+                            // Display the error message in the corresponding field
+                            errorContainer.textContent = data.errors[field].join(", ");
+                        }
+                    });
+
+                    // General error message (if any)
+                    Swal.fire({
+                        title: 'Error!',
+                        text: data.message || 'There was an issue adding the candidate.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'An unexpected error occurred.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            }
+        })
+        .catch(error => {
+            // En cas d'erreur de réseau ou d'autre problème
+            Swal.fire({
+                title: 'Error!',
+                text: 'An unexpected error occurred.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        });
+    });
+});
+
+
+// Include this function at the top or bottom of your script
+function previewPhoto(event) {
+    const photoPreviewImage = document.getElementById('photoPreviewImage');
+    const photoPreview = document.getElementById('photoPreview');
+    const file = event.target.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            photoPreviewImage.src = e.target.result;
+            photoPreviewImage.style.display = 'block'; // Show the preview
+        }
+
+        reader.readAsDataURL(file);
+    } else {
+        // Reset to default image if no file selected
+        photoPreviewImage.src = "{% static 'images/default_profile_pic.png' %}";
+        photoPreviewImage.style.display = 'none'; // Hide the preview
+    }
+}
 
 
 // Function to open the modal for candidate creation
@@ -81,4 +173,82 @@ window.onclick = function(event) {
     }
 }
 
+// Function to show confirmation dialog
+function confirmVote(button) {
+    const candidateId = button.getAttribute('data-candidate-id');
 
+    let confirmationText = 'You can modify your choice until the end of the election.';
+
+    if (previousCandidateName) {
+        confirmationText = `You have already voted for ${previousCandidateName}. ${confirmationText}`;
+    }
+
+    // Show SweetAlert2 confirmation dialog
+    Swal.fire({
+        title: 'Are you sure?',
+        text: confirmationText,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, vote for this candidate!',
+        cancelButtonText: 'No, cancel',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // On confirmation, submit the vote
+            voteForCandidate(candidateId);
+        }
+    });
+}
+
+
+function voteForCandidate(candidateId) {
+    // Use the election ID passed from Django
+    const electionId = window.electionId; // Ensure this variable is defined in the Django template
+
+    // Retrieve the CSRF token
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    // Perform the AJAX request with the dynamic election ID
+    fetch(`/election/${electionId}/vote/${candidateId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+        },
+        body: JSON.stringify({ candidate_id: candidateId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // If the vote is successfully recorded
+            Swal.fire(
+                'Success!',
+                data.message || 'Your vote has been successfully recorded.',
+                'success'
+            );
+        } else if (data.error) {
+            // If a specific error is returned from the backend
+            Swal.fire(
+                'Error!',
+                data.error, // Display the error message returned by the backend
+                'error'
+            );
+        } else {
+            // If a general error occurs
+            Swal.fire(
+                'Error!',
+                'There was an error submitting your vote. Please try again later.',
+                'error'
+            );
+        }
+    })
+    .catch(error => {
+        // Handle unexpected errors
+        Swal.fire(
+            'Error!',
+            'An unexpected error occurred. Please try again.',
+            'error'
+        );
+        console.error('Unexpected error:', error);
+    });
+}

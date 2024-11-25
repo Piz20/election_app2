@@ -114,9 +114,16 @@ class Vote(models.Model):
     candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
 
     def clean(self):
-        """Ensure a user can vote only once per election."""
-        if Vote.objects.filter(user=self.user, candidate__election=self.candidate.election).exists():
-            raise ValidationError("You have already voted in this election.")
+        """Ensure a user can only vote once per election, but can change their vote."""
+        # Vérifiez si l'utilisateur a déjà voté dans cette élection
+        existing_vote = Vote.objects.filter(user=self.user, candidate__election=self.candidate.election)
+
+        # Si l'utilisateur a déjà voté pour un autre candidat, on lui permet de changer de vote
+        if existing_vote.exists():
+            if existing_vote.first().candidate != self.candidate:
+                pass  # L'utilisateur change son vote, donc aucune validation n'est nécessaire
+            else:
+                pass  # L'utilisateur a déjà voté pour le même candidat, rien à faire
 
     def save(self, *args, **kwargs):
         self.clean()

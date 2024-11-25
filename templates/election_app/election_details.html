@@ -1,5 +1,7 @@
 {% extends "election_app/base.html" %}
 {% load static %}
+{% load election_filters %}
+
 {% block title %}Election Details{% endblock %}
 
 {% block extra_css %}
@@ -23,9 +25,9 @@
                 </button>
 
                 {% if candidates %}
-                    <div class="candidates-list">
+                    <div class="candidates-list" id="candidatesList">
                         {% for candidate in candidates %}
-                            <div class="candidate-card">
+                            <div class="candidate-card" id="candidate-card-{{ candidate.id }}">
                                 <div class="candidate-photo">
                                     {% if candidate.profile_picture %}
                                         <img src="{{ candidate.profile_picture.url }}"
@@ -45,12 +47,21 @@
                                         </p>
                                     {% endif %}
                                 </div>
-                                <!-- Vote button with candidate id passed to the JS function -->
-                                <button class="vote-btn" onclick="">Vote</button>
+
+                                {% if has_voted|get_item:candidate.id %}
+                                    <!-- If the user has already voted for this candidate -->
+                                    <button class="vote-btn" style="display:none;">You have voted for this candidate
+                                    </button>
+                                {% else %}
+                                    <!-- If the user has not voted yet -->
+                                    <button class="vote-btn" data-candidate-id="{{ candidate.id }}"
+                                            onclick="confirmVote(this)">Vote
+                                    </button>
+                                {% endif %}
                             </div>
                         {% endfor %}
-
                     </div>
+
                 {% else %}
                     <p>No candidates available for this election.</p>
                 {% endif %}
@@ -61,7 +72,6 @@
     <!-- Modal Popup for Candidate Creation -->
     <div id="candidateModal" class="modal-election">
         <div class="modal-content-election">
-            <!-- Close button for modal -->
             <span class="close-election" onclick="closeModalCandidate()">&times;</span>
             <h2>Create Candidate</h2>
             <form class="modal-form-election" id="createCandidateForm" method="POST" enctype="multipart/form-data">
@@ -71,16 +81,12 @@
                 <label for="profile_picture">Candidate Photo:</label>
                 <div class="photo-upload-container">
                     <div class="photo-preview" id="photoPreview">
-                        <img id="photoPreviewImage"
-                             src="                  
-                                    
-                                     {% if form.profile_picture.value %}{{ form.profile_picture.value }}{% else %}{% static 'images/default_profile_pic.png' %}{% endif %}"
+                        <img id="photoPreviewImage" src="
+                                {% if form.profile_picture.value %}{{ form.profile_picture.value }}{% else %}{% static 'images/default_profile_pic.png' %}{% endif %}"
                              alt="Candidate Photo">
-
                     </div>
                     <input type="file" id="profile_picture" name="profile_picture" accept="image/*"
-                           onchange="previewPhoto(event)"
-                           hidden>
+                           onchange="previewPhoto(event)" hidden>
                     <label for="profile_picture" class="photo-upload-btn">
                         <i class="fa fa-camera"></i> Click to Choose Photo
                     </label>
@@ -105,11 +111,15 @@
 
     <script>
         const formActionUrl = "{% url 'add_candidate' election.id %}";
-         // Inclure les dates dans le HTML pour utilisation dans le JavaScript
-    const electionStartDate = new Date("{{ election.start_date|date:'Y-m-d H:i:s' }}");
-    const electionEndDate = new Date("{{ election.end_date|date:'Y-m-d H:i:s' }}");
-    </script>
-    
-    <script src="{% static 'js/election_details.js' %}" defer></script>
+        window.electionId = "{{ election.id }}";  // Injecter l'ID de l'élection
+        <!-- Passer la variable previous_candidate_name à JavaScript -->
+        // Passer le nom du précédent candidat au JavaScript
+        var previousCandidateName = "{{ previous_candidate_name|escapejs }}";
 
+        // Inclure les dates dans le HTML pour utilisation dans le JavaScript
+        const electionStartDate = new Date("{{ election.start_date|date:'Y-m-d H:i:s' }}");
+        const electionEndDate = new Date("{{ election.end_date|date:'Y-m-d H:i:s' }}");
+    </script>
+
+    <script src="{% static 'js/election_details.js' %}" defer></script>
 {% endblock %}
