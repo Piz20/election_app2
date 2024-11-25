@@ -1,0 +1,217 @@
+/* General container */
+.container {
+   width: 100%;
+    height: auto;
+    margin: 0 auto;
+    padding: 0 -50px;
+    font-family: 'DM Serif Display', serif;
+    background: #001124;
+    color: white;
+
+}
+
+/* Content section */
+.content {
+  width: 968px;
+  height: 585px;
+  position: absolute;
+  left: 200px;
+  top: 236px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.center-text {
+  padding-top: 30px;
+  text-align: center;  /* Horizontally center the text */
+  height: 100vh;           /* Take full viewport height */
+  text-decoration: underline;
+
+}
+
+/* Left Section */
+.left-section {
+  width: 285px;
+  height: 275.99px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.gradient-overlay {
+  width: 285px;
+  height: 275.99px;
+  opacity: 0.50;
+  background: linear-gradient(0deg, rgba(128, 128, 128, 0.25) 0%, rgba(128, 128, 128, 0.12) 54%, rgba(128, 128, 128, 0.10) 100%);
+}
+
+/* Profile Image Container */
+.profile-image {
+  width: 300px; /* Fixed width */
+  height: 300px; /* Fixed height */
+  border-radius: 50%; /* Circular shape */
+  overflow: hidden; /* Ensures the image stays inside the circle */
+  background: #f0f0f0; /* Light gray background for empty space */
+  display: flex;
+  justify-content: center; /* Center the image horizontally */
+  align-items: center; /* Center the image vertically */
+  margin: 0 auto; /* Center the container itself in the parent */
+}
+
+/* Image inside the circular container */
+.profile-image img {
+  width: 100%; /* Image covers the container */
+  height: 100%; /* Ensures no empty space */
+  object-fit: cover; /* Maintains aspect ratio, cropping if necessary */
+}
+
+/* Centered Change Profile Picture Button */
+.change-picture-btn {
+  background-color: #015FC7; /* Blue background */
+  color: white; /* Text color */
+  border: none; /* Remove border */
+  padding: 10px 20px; /* Button padding */
+  border-radius: 5px; /* Rounded corners */
+  font-size: 16px;
+  font-family: DM Serif Display, sans-serif;
+  cursor: pointer; /* Pointer cursor on hover */
+  margin: 10px auto 0; /* Space between image and button */
+  display: block; /* Center the button */
+  margin-bottom: -30px;
+  margin-left: 170px;
+
+}
+
+/* Hover effect for the button */
+.change-picture-btn:hover {
+  background-color: #013a8c; /* Darker blue on hover */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Subtle shadow effect */
+}
+
+
+/* Right Section */
+.right-section {
+  width: 508px;
+  height: 577px;
+  position: relative;
+}
+
+.profile-item {
+  margin-bottom: 15px; /* Space between each profile item */
+}
+
+.value {
+  color: white;
+  font-size: 23px;
+  font-family: DM Serif Display;
+  font-weight: 400;
+  position: absolute;
+  left: 0;
+}
+
+/* Label styles */
+.label {
+  color: #015FC7;
+  font-size: 18px;
+  font-family: Padauk;
+  font-weight: 400;
+  position: absolute;
+}
+
+.name-label {
+  left: 0;
+  top: 0;
+}
+
+.matricule-label {
+  left: 0;
+  top: 85px;
+}
+
+.dob-label {
+  left: 0;
+  top: 180px;
+}
+
+.email-label {
+  left: 0;
+  top: 270px;
+}
+
+.gender-label {
+  left: 0;
+  top: 355px;
+}
+
+.eligibility-label {
+  left: 0;
+  top: 635px;
+}
+
+.verification-label {
+  left: 0;
+  top: 720px;
+}
+
+/* Value positioning under the labels */
+.name-value {
+  top: 30px;
+}
+
+.matricule-value {
+  top: 115px;
+}
+
+.dob-value {
+  top: 210px;
+}
+
+.email-value {
+  top: 300px;
+}
+
+.gender-value {
+  top: 400px;
+}
+
+.eligibility-value {
+  top: 650px;
+}
+
+.verification-value {
+  top: 735px;
+}
+
+
+.change-picture {
+  left: 252px;
+  top: 320px; /* Adjust the position to be below the profile image */
+  position: absolute;
+  color: white;
+  font-size: 18px;
+  font-family: DM Serif Display;
+  font-weight: 400;
+  word-wrap: break-word;
+}
+
+.edit-button {
+  width: 27px;
+  height: 27px;
+  position: absolute;
+  left: 236px;
+  top: 682px;
+  border: 2px #015FC7 solid;
+}
+
+.edit-text {
+  left: 280px;
+  top: 683px;
+  position: absolute;
+  color: white;
+  font-size: 20px;
+  font-family: DM Serif Display;
+  font-weight: 400;
+  word-wrap: break-word;
+}

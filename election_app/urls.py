@@ -14,27 +14,35 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+
 from . import views
 
 urlpatterns = [
 
-    path('admin/', admin.site.urls),
-    # Route pour la page de connexion
+                  path('admin/', admin.site.urls),
+                  # Route pour la page de connexion
 
-    # Route pour la page d'index (page d'accueil)
-    path('', views.index_view, name='index'),  # Vous devez ajouter cette vue dans votre fichier `views.py`
+                  # Route pour la page d'index (page d'accueil)
+                  path('', views.index_view, name='index'),
+                  # Vous devez ajouter cette vue dans votre fichier `views.py`
 
-    path('register/', views.register_view, name='register'),
+                  path('register/', views.register_view, name='register'),
 
-    path('about/', views.about_view, name='about'),
+                  path('about/', views.about_view, name='about'),
 
-    path('login/', views.login_view, name='login'),
+                  path('login/', views.login_view, name='login'),
 
-    path('contact/', views.contact_view, name='contact') ,
+                  path('logout/', views.logout_view, name='logout'),
+                  path('profile/', views.profile_view, name='profile'),
 
-    path('features/', views.features_view, name='features'),
+                  path('contact/', views.contact_view, name='contact'),
 
-    path('help/', views.help_view, name='help'),
-]
+                  path('features/', views.features_view, name='features'),
+                  path('elections/', views.elections_view, name='elections'),
+                  path('create_election/', views.create_election_view, name='create_election'),
+                  path('help/', views.help_view, name='help'),
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

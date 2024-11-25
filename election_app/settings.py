@@ -140,3 +140,7 @@ AUTH_USER_MODEL = 'election_app.CustomUser'
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 # settings.py
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
+
+# Chemin de base pour les fichiers téléchargés
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

@@ -1,8 +1,14 @@
 .container {
+     width: 100%;
+    height: auto;
+    margin: 0 auto;
+    text-align: center; /* Centrer le texte horizontalement */
+    font-family: 'DM Serif Display', serif;
+    color: white;
     display: flex;
-    justify-content: center; /* Centrer la boîte globalement */
-    align-items: center;
-    height: 100vh;
+    flex-direction: column; /* Organiser les éléments de haut en bas */
+    justify-content: center; /* Centrer verticalement */
+    align-items: center; /* Centre
 }
 
 .steps-box {

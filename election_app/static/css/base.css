@@ -1,3 +1,4 @@
+/* General Styles */
 body {
     margin: 0;
     padding: 0;
@@ -7,6 +8,7 @@ body {
     padding-top: 80px; /* Space for fixed header */
 }
 
+/* Header Styles */
 header {
     position: fixed;
     top: 0;
@@ -15,9 +17,11 @@ header {
     justify-content: flex-end;
     align-items: center;
     padding: 20px 40px;
+    margin:0 auto;
     background: black;
     width: 100%;
     z-index: 10;
+
 }
 
 .menu {
@@ -30,13 +34,30 @@ header {
     font-size: 25px;
     text-decoration: none;
     color: white;
-    transition: transform 0.3s ease;
+    position: relative;
+    transition: transform 0.3s ease, color 0.3s ease;
 }
 
 .menu-item:hover {
     transform: scale(1.1);
 }
 
+.menu-item::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background-color: #015FC7;
+    transition: width 0.3s ease;
+}
+
+.menu-item:hover::after {
+    width: 100%;
+}
+
+/* Login Button Styles */
 .login-box {
     width: 119px;
     height: 34px;
@@ -50,37 +71,34 @@ header {
 
 .login-button {
     font-size: 25px;
-    font-family: 'DM Serif Display', serif;
     text-decoration: none;
     color: white;
-    transition: transform 0.3s ease; /* Transition for enlarging */
+    transition: transform 0.3s ease;
 }
 
 .login-button:hover {
-    transform: scale(1.1); /* Button enlarges on hover */
+    transform: scale(1.1);
 }
 
 .login-button:active {
-    transform: scale(1.05); /* Slightly reduces size on click */
+    transform: scale(1.05);
 }
 
-/* Container setup */
+/* Main Container */
 .container {
     width: 100%;
     height: auto;
     position: relative;
     background: black;
-    margin-top: 120px; /* Space below the fixed header */
+    margin-top: 120px;
 }
 
 .content {
     width: 1314px;
-    height: auto;
-    position: relative;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
-    gap: 50px; /* Adjust space between image and content */
+    gap: 50px;
 }
 
 .left-section {
@@ -93,7 +111,7 @@ header {
 
 .main-image {
     width: 100%;
-    max-width: 700px; /* Adjust max-width as needed */
+    max-width: 700px;
     height: auto;
 }
 
@@ -123,6 +141,7 @@ header {
     color: #015FC7;
 }
 
+/* Buttons Section */
 .buttons {
     display: flex;
     gap: 36px;
@@ -156,12 +175,13 @@ header {
     background: #004EA4;
     color: white;
 }
+
 .button-text {
-    text-decoration: none
-;
+    text-decoration: none;
     color: white;
 }
 
+/* Footer Styles */
 footer {
     width: 100%;
     padding: 40px 20px;
@@ -171,7 +191,9 @@ footer {
     justify-content: space-between;
     align-items: center;
     box-sizing: border-box;
-    margin-top: 100px;
+    margin-top: 20px;
+    overflow: hidden; /* Hide any overflow content */
+    flex-wrap: wrap; /* Ensure the content wraps if it exceeds the height */
 }
 
 .footer-section {
@@ -179,12 +201,7 @@ footer {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-}
-
-.footer-section span {
-    font-size: 20px;
-    margin-bottom: 10px;
-    font-weight: bold;
+    flex: 1;
 }
 
 .footer-links {
@@ -244,11 +261,13 @@ footer {
     margin: 20px 0;
 }
 
+/* Ensuring content in footer wraps appropriately */
 @media (max-width: 768px) {
     footer {
         flex-direction: column;
         align-items: stretch;
         padding: 20px 10px;
+        max-height: none; /* Remove max-height on smaller screens */
     }
 
     .footer-separator {
@@ -270,7 +289,7 @@ footer {
     }
 }
 
-/* Animation du texte */
+/* Text Animation */
 @keyframes typing {
     from {
         width: 0;
@@ -286,13 +305,42 @@ footer {
     }
 }
 
-/* Style du texte animé */
 #typing-effect {
     display: inline-block;
     white-space: nowrap;
     overflow: hidden;
-    border-right: 2px solid blue;  /* Le curseur de type "barre" */
-    padding-right: 5px; /* Espacement entre le texte et le curseur */
+    border-right: 2px solid blue;
+    padding-right: 5px;
     animation: typing 3s steps(30) 1s infinite normal both, blink 0.75s step-end infinite;
-    position: relative;
+}
+
+ .popup-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .popup-content {
+        background: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        text-align: center;
+    }
+
+    .popup-content button {
+        margin: 5px;
+        padding: 10px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    .popup-content h3 {
+    color: #333;  /* Couleur du texte, assurez-vous qu'elle contraste bien */
+    font-size: 18px;  /* Taille du texte */
 }

@@ -1,0 +1,73 @@
+{% extends "election_app/base.html" %}
+{% load static %}
+{% block title %}Profile{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="center-text">
+            <h1>Here's your information</h1>
+        </div>
+        <div class="content">
+           <div class="left-section">
+    <!-- Profile Image Section -->
+    <div class="profile-image">
+        {% if user.profile_picture %}
+            <img src="{{ user.profile_picture.url }}" alt="Profile Picture">
+        {% else %}
+            <img src="{% static 'images/default_profile_pic.png' %}" alt="Profile Picture">
+        {% endif %}
+    </div>
+
+    <!-- Form for changing the profile picture -->
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="profile_picture" id="file-input" style="display:none;" accept="image/*" />
+        <button type="button" id="change-picture-btn" class="change-picture-btn">Change Profile Picture</button>
+        <button type="submit" style="display:none" id="submit-btn">Submit</button>
+    </form>
+</div>
+
+            <div class="right-section">
+                <div class="profile-item">
+                    <div class="label name-label">Name:</div>
+                    <div class="value name-value">{{ user.name }}</div>
+                </div>
+                <div class="profile-item">
+                    <div class="label matricule-label">Matricule:</div>
+                    <div class="value matricule-value">{{ user.matricule }}</div>
+                </div>
+                <div class="profile-item">
+                    <div class="label dob-label">Date of Birth</div>
+                    <div class="value dob-value">{{ user.date_of_birth }}</div>
+                </div>
+                <div class="profile-item">
+                    <div class="label email-label">Email:</div>
+                    <div class="value email-value">{{ user.email }}</div>
+                </div>
+                <div class="profile-item">
+                    <div class="label gender-label">Gender:</div>
+                    <div class="value gender-value">{{ user.gender }}</div>
+                </div>
+                
+            </div>
+        </div>
+
+        
+    </div>
+
+    <script>
+        // JavaScript to trigger file input when the custom button is clicked
+        document.getElementById("change-picture-btn").onclick = function() {
+            document.getElementById("file-input").click();
+        };
+
+        // Automatically submit the form once a file is chosen
+        document.getElementById("file-input").onchange = function() {
+            document.getElementById("submit-btn").click();
+        };
+    </script>
+{% endblock %}

@@ -6,69 +6,118 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Vote Today{% endblock %}</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    
+
     <!-- Bloc pour les fichiers CSS supplémentaires -->
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <!-- Affichage conditionnel du header -->
-    {% block hide_header %}
-        {% if hide_header != 'True' %}
-            <header>
-                <div class="menu">
-                    <a href="/" class="menu-item">Home</a>
-                    <a href="/about" class="menu-item">About</a>
-                    <a href="/contact" class="menu-item">Contact</a>
-                </div>
-                <div class="login-box">
-                    <a href="/login" class="login-button">Login</a>
-                </div>
-            </header>
-        {% endif %}
-    {% endblock %}
 
-    <!-- Contenu dynamique de la page -->
-    {% block content %}{% endblock %}
-    
-    <!-- Affichage conditionnel du footer -->
-    {% block hide_footer %}
-        {% if hide_footer != 'True' %}
-            <footer>
-                <!-- Section de la politique de confidentialité -->
-                <div class="footer-section privacy">
-                    <span>Privacy Policy</span>
-                    <div class="footer-links">
-                        <a href="#">Terms of Service</a>
-                        <a href="#">Cookie Policy</a>
+<!-- Affichage conditionnel du header -->
+{% block hide_header %}
+    {% if hide_header != 'True' %}
+        <header>
+            {% block custom_header %}
+                {% if user.is_authenticated %}
+                    <!-- Nouveau contenu pour le header lorsque l'utilisateur est connecté -->
+                    <div class="menu">
+                        <a href="/profile/" class="menu-item">My Profile</a>
+                        <a href="/elections/" class="menu-item">Elections</a>
+                        <a href="/features/" class="menu-item">Help</a>
+                        <!-- Lien vers la déconnexion -->
+                        <a href="#" id="logout-link" class="menu-item">Logout</a>
                     </div>
-                </div>
-
-                <!-- Séparateur -->
-                <div class="footer-separator"></div>
-
-                <!-- Section des réseaux sociaux (au milieu) -->
-                <div class="footer-section social">
-                    <span>Social</span>
-                    <div class="social-icons">
-                        <a href="#" class="icon-facebook" title="Facebook"></a>
-                        <a href="#" class="icon-instagram" title="Instagram"></a>
+                {% else %}
+                    <!-- Header pour un utilisateur non connecté -->
+                    <div class="menu">
+                        <a href="/" class="menu-item">Home</a>
+                        <a href="/about" class="menu-item">About</a>
+                        <a href="/contact" class="menu-item">Contact</a>
                     </div>
-                </div>
-
-                <!-- Séparateur -->
-                <div class="footer-separator"></div>
-
-                <!-- Section d'aide -->
-                <div class="footer-section help">
-                    <span>Help</span>
-                    <div class="footer-links">
-                        <a href="#">Contact</a>
-                        <a href="#">FAQ</a>
+                    <div class="login-box">
+                        <a href="/login" class="login-button">Login</a>
                     </div>
+                {% endif %}
+            {% endblock %}
+        </header>
+    {% endif %}
+{% endblock %}
+
+<!-- Contenu dynamique de la page -->
+{% block content %}{% endblock %}
+
+<!-- Affichage conditionnel du footer -->
+{% block hide_footer %}
+    {% if hide_footer != 'True' %}
+        <footer>
+            <!-- Section de la politique de confidentialité -->
+            <div class="footer-section privacy">
+                <span>Privacy Policy</span>
+                <div class="footer-links">
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Cookie Policy</a>
                 </div>
-            </footer>
-        {% endif %}
-    {% endblock %}
+            </div>
+
+            <!-- Séparateur -->
+            <div class="footer-separator"></div>
+
+            <!-- Section des réseaux sociaux (au milieu) -->
+            <div class="footer-section social">
+                <span>Social</span>
+                <div class="social-icons">
+                    <a href="#" class="icon-facebook" title="Facebook"></a>
+                    <a href="#" class="icon-instagram" title="Instagram"></a>
+                </div>
+            </div>
+
+            <!-- Séparateur -->
+            <div class="footer-separator"></div>
+
+            <!-- Section d'aide -->
+            <div class="footer-section help">
+                <span>Help</span>
+                <div class="footer-links">
+                    <a href="#">Contact</a>
+                    <a href="#">FAQ</a>
+                </div>
+            </div>
+        </footer>
+    {% endif %}
+{% endblock %}
+
+<!-- Formulaire pour la déconnexion -->
+<form id="logout-form" action="{% url 'logout' %}" method="POST" style="display: none;">
+    {% csrf_token %}
+</form>
+
+<div id="logout-popup" class="popup-overlay">
+    <div class="popup-content">
+        <h3>Are you sure you want to log out?</h3>  <!-- Texte affiché dans le popup -->
+        <button id="confirm-logout">Yes</button>
+        <button id="cancel-logout">Cancel</button>
+    </div>
+</div>
+
+
+<!-- Script JavaScript pour afficher le popup de confirmation -->
+<script>
+   document.getElementById('logout-link').addEventListener('click', function(e) {
+    e.preventDefault();  // Empêche le lien de rediriger immédiatement
+    document.getElementById('logout-popup').style.display = 'flex';  // Affiche le popup
+});
+
+document.getElementById('confirm-logout').addEventListener('click', function() {
+    document.getElementById('logout-form').submit();  // Soumet le formulaire de déconnexion
+});
+
+document.getElementById('cancel-logout').addEventListener('click', function() {
+    document.getElementById('logout-popup').style.display = 'none';  // Ferme le popup
+});
+</script>
+
+
 </body>
 </html>
