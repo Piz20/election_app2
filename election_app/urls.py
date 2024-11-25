@@ -44,5 +44,6 @@ urlpatterns = [
                   path('features/', views.features_view, name='features'),
                   path('elections/', views.elections_view, name='elections'),
                   path('create_election/', views.create_election_view, name='create_election'),
+                  path('election/<int:election_id>/', views.election_details_view, name='election_details'),
                   path('help/', views.help_view, name='help'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

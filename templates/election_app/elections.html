@@ -6,74 +6,6 @@
     <link rel="stylesheet" href="{% static 'css/elections.css' %}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>
-        /* Modal styles */
-        .modal-election {
-            display: none; /* Hidden by default */
-            position: fixed;
-            z-index: 1; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgb(0, 0, 0); /* Black with opacity */
-            background-color: rgba(0, 0, 0, 0.4); /* Black with opacity */
-            padding-top: 60px;
-        }
-
-        .modal-content-election {
-            background-color: #001124;
-            margin: 5% auto;
-            padding: 40px;
-            border: 1px solid #888;
-            width: 70%;
-            max-width: 600px;
-        }
-
-        .close-election {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close-election:hover,
-        .close-election:focus {
-            color: red;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        /* Modal Form Styles */
-        .modal-form-election input, .modal-form-election textarea {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .modal-form-election button {
-            padding: 10px 15px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .modal-form-election button:hover {
-            background-color: #45a049;
-        }
-
-        .error-message {
-            color: red;
-            font-size: 0.9em;
-            margin-top: 5px;
-        }
-
-    </style>
 {% endblock %}
 
 {% block content %}
@@ -84,10 +16,12 @@
                 <h2 class="section-title">Upcoming Elections:</h2>
                 {% if upcoming_elections %}
                     {% for election in upcoming_elections %}
+                        <a href="{% url 'election_details' election.id %}" class="card-link">
                         <div class="card">
                             <div class="card-text">{{ election.name }}</div>
                             <div class="card-date">{{ election.start_date|date:"d-m-Y" }}</div>
                         </div>
+                        </a>
                     {% endfor %}
                 {% else %}
                     <p>No upcoming elections at the moment.</p>
@@ -97,10 +31,12 @@
                 <h2 class="section-title">Other Elections:</h2>
                 {% if past_elections %}
                     {% for election in past_elections %}
+                        <a href="{% url 'election_details' election.id %}" class="card-link">
                         <div class="card">
                             <div class="card-text">{{ election.name }}</div>
                             <div class="card-date">{{ election.start_date|date:"d-m-Y" }}</div>
                         </div>
+                        </a>
                     {% endfor %}
                 {% else %}
                     <p>No other elections found.</p>
@@ -121,48 +57,34 @@
             <form class="modal-form-election" id="createElectionForm" method="POST">
                 {% csrf_token %}
 
-                <!-- Election Name -->
+                <!-- Nom de l'élection -->
                 <label for="name">Election Name:</label>
                 <input type="text" id="name" name="name" value="{{ form.name.value|default:'' }}" required>
-                {% if form.name.errors %}
-                    {% for error in form.name.errors %}
-                        <div class="error-message">{{ error }}</div>
-                    {% endfor %}
-                {% endif %}
+                <!-- Les erreurs s'affichent ici -->
+                <div class="error-container" id="error-name"></div>
 
                 <!-- Description -->
                 <label for="description">Description:</label>
                 <textarea id="description" name="description" rows="4"
                           required>{{ form.description.value|default:'' }}</textarea>
-                {% if form.description.errors %}
-                    {% for error in form.description.errors %}
-                        <div class="error-message">{{ error }}</div>
-                    {% endfor %}
-                {% endif %}
+                <div class="error-container" id="error-description"></div>
 
-                <!-- Start Date and Time -->
+                <!-- Date de début -->
                 <label for="start_date">Start Date and Time:</label>
                 <input type="datetime-local" id="start_date" name="start_date"
                        value="{{ form.start_date.value|default:'' }}" required>
-                {% if form.start_date.errors %}
-                    {% for error in form.start_date.errors %}
-                        <div class="error-message">{{ error }}</div>
-                    {% endfor %}
-                {% endif %}
+                <div class="error-container" id="error-start_date"></div>
 
-                <!-- End Date and Time -->
+                <!-- Date de fin -->
                 <label for="end_date">End Date and Time:</label>
                 <input type="datetime-local" id="end_date" name="end_date" value="{{ form.end_date.value|default:'' }}"
                        required>
-                {% if form.end_date.errors %}
-                    {% for error in form.end_date.errors %}
-                        <div class="error-message">{{ error }}</div>
-                    {% endfor %}
-                {% endif %}
+                <div class="error-container" id="error-end_date"></div>
 
-                <!-- Submit Button -->
+                <!-- Bouton de soumission -->
                 <button type="submit">Create Election</button>
             </form>
+
         </div>
     </div>
 
@@ -182,9 +104,7 @@
 
         // Submit the form and handle success/failure with popups
         document.getElementById("createElectionForm").addEventListener("submit", function (event) {
-            // Let Django handle form validation and error messages by submitting normally
-            // Prevent the default form submission here to allow for popup handling
-            event.preventDefault();
+            event.preventDefault(); // Empêcher la soumission classique du formulaire
 
             const formData = new FormData(this);
             const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
@@ -200,7 +120,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // If the form submission is successful, show a success popup
+                        // Si le formulaire est validé avec succès
                         Swal.fire({
                             title: 'Success!',
                             text: data.message,
@@ -208,15 +128,35 @@
                             confirmButtonText: 'OK',
                         }).then(() => {
                             closeModalElection();
-                            location.reload(); // Reload page after success
+                            location.reload(); // Recharger la page après succès
                         });
                     } else {
-                        // If there is an error, show an error popup
+                        // Si des erreurs sont retournées, les afficher
+                        const form = document.getElementById("createElectionForm");
+                        const errorMessages = data.errors;
+
+                        // Réinitialiser les erreurs précédentes
+                        form.querySelectorAll(".error-message").forEach(errorEl => errorEl.remove());
+
+                        // Ajouter les nouvelles erreurs
+                        for (const [field, errors] of Object.entries(errorMessages)) {
+                            const inputElement = form.querySelector(`[name="${field}"]`);
+                            if (inputElement) {
+                                errors.forEach(error => {
+                                    const errorEl = document.createElement("div");
+                                    errorEl.className = "error-message";
+                                    errorEl.textContent = error;
+                                    inputElement.parentNode.appendChild(errorEl); // Ajouter après le champ concerné
+                                });
+                            }
+                        }
+
+                        // Afficher une alerte générique pour l'utilisateur
                         Swal.fire({
                             title: 'Error',
-                            text: data.message || 'Something went wrong.',
+                            text: data.message,
                             icon: 'error',
-                            confirmButtonText: 'Try Again',
+                            confirmButtonText: 'OK',
                         });
                     }
                 })
@@ -230,6 +170,7 @@
                     });
                 });
         });
+
     </script>
 
 

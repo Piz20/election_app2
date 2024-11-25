@@ -1,0 +1,54 @@
+{% extends "election_app/base.html" %}
+{% load static %}
+{% block title %}Election Details{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/election_details.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <main class="content">
+        <!-- Election Details -->
+        <section class="section election-details">
+            <h2 class="section-title">{{ election.name }}</h2>
+            <p class="election-description">{{ election.description }}</p>
+            <p class="election-date">
+                Start: {{ election.start_date|date:"d-m-Y H:i" }} | End: {{ election.end_date|date:"d-m-Y H:i" }}
+            </p>
+        </section>
+
+        <!-- Candidates -->
+        <section class="section candidates">
+            <h2 class="section-title">Candidates</h2>
+            {% if candidates %}
+                <div class="candidates-list">
+                    {% for candidate in candidates %}
+                        <div class="candidate-card">
+                            <div class="candidate-photo">
+                                <img src="{{ candidate.photo_url }}" alt="Photo of {{ candidate.name }}">
+                            </div>
+                            <div class="candidate-info">
+                                <h3 class="candidate-name">{{ candidate.name }}</h3>
+                                <p class="candidate-bio">{{ candidate.bio }}</p>
+                            </div>
+                            <button class="vote-btn" onclick="voteForCandidate({{ candidate.id }})">Vote</button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>No candidates available for this election.</p>
+            {% endif %}
+        </section>
+    </main>
+</div>
+
+<script>
+    // Function to handle voting
+    function voteForCandidate(candidateId) {
+       
+    }
+</script>
+{% endblock %}

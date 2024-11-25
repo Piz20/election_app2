@@ -1,0 +1,82 @@
+/* Section Détails de l'élection */
+.container {
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+    padding: 0 -50px;
+    text-align: center; /* Centrer le texte horizontalement */
+    font-family: 'DM Serif Display', serif;
+    background: #001124;
+    color: white;
+    display: flex;
+    flex-direction: column; /* Organiser les éléments de haut en bas */
+    justify-content: center; /* Centrer verticalement */
+    align-items: center; /* Centrer horizontalement */
+}
+
+
+.election-description {
+    font-size: 18px;
+    margin: 15px 0;
+}
+
+.election-date {
+    font-size: 16px;
+    color: gray;
+}
+
+/* Liste des candidats */
+.candidates-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* Carte de chaque candidat */
+.candidate-card {
+    width: 250px;
+    background: #C4C4C4;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.candidate-photo img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.candidate-info {
+    margin-bottom: 15px;
+}
+
+.candidate-name {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.candidate-bio {
+    font-size: 14px;
+    color: gray;
+}
+
+/* Bouton de vote */
+.vote-btn {
+    background-color: green;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.vote-btn:hover {
+    background-color: darkgreen;
+}

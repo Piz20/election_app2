@@ -7,7 +7,7 @@ from django.utils import timezone
 from .forms import CustomUserRegistrationForm, LoginForm, ProfilePictureForm, ElectionForm
 
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from .models import Election
 
@@ -35,7 +35,7 @@ def register_view(request):
             user.set_password(form.cleaned_data["password"])  # Hash le mot de passe
             user.save()
             messages.success(request, "Registration successful. You can now log in.")
-            return redirect('profile')
+            return redirect('elections')
         else:
             # Messages d'erreurs ajoutés automatiquement par le formulaire
             messages.error(request, "There were errors in your form.")
@@ -57,7 +57,7 @@ def login_view(request):
 
             if user is not None:
                 login(request, user)
-                return redirect('profile')  # Rediriger vers la page d'accueil après connexion
+                return redirect('elections')  # Rediriger vers la page d'accueil après connexion
             else:
                 # Si l'utilisateur est invalide, ajouter un message d'erreur
                 messages.error(request, 'Invalid login credentials')
@@ -101,12 +101,13 @@ def elections_view(request):
 
     # Séparer les élections en "Upcoming" et "Other"
     upcoming_elections = elections.filter(start_date__gte=timezone.now()).order_by('start_date')
-    past_elections = elections.filter(start_date__lt=timezone.now()).order_by('-start_date')
+    past_elections = elections.filter(end_date__lt=timezone.now()).order_by('end_date')
 
     return render(request, 'election_app/elections.html', {
         'upcoming_elections': upcoming_elections,
         'past_elections': past_elections,
     })
+
 
 def create_election_view(request):
     if request.method == 'POST':
@@ -139,6 +140,16 @@ def create_election_view(request):
         form = ElectionForm()
 
     return render(request, 'election_app/elections.html', {'form': form})
+
+
+def election_details_view(request, election_id):
+    # Récupérer l'élection spécifique ou retourner une erreur 404 si non trouvée
+    election = get_object_or_404(Election, id=election_id)
+
+    # Transmettre les données à la vue
+    return render(request, 'election_app/election_details.html', {'election': election})
+
+
 def about_view(request):
     return render(request, 'election_app/about.html')
 
