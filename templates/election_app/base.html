@@ -104,20 +104,21 @@
 
 <!-- Script JavaScript pour afficher le popup de confirmation -->
 <script>
-   document.getElementById('logout-link').addEventListener('click', function(e) {
-    e.preventDefault();  // Empêche le lien de rediriger immédiatement
-    document.getElementById('logout-popup').style.display = 'flex';  // Affiche le popup
-});
+    document.getElementById('logout-link').addEventListener('click', function (e) {
+        e.preventDefault();  // Empêche le lien de rediriger immédiatement
+        document.getElementById('logout-popup').style.display = 'flex';  // Affiche le popup
+    });
 
-document.getElementById('confirm-logout').addEventListener('click', function() {
-    document.getElementById('logout-form').submit();  // Soumet le formulaire de déconnexion
-});
+    document.getElementById('confirm-logout').addEventListener('click', function () {
+        document.getElementById('logout-form').submit();  // Soumet le formulaire de déconnexion
+    });
 
-document.getElementById('cancel-logout').addEventListener('click', function() {
-    document.getElementById('logout-popup').style.display = 'none';  // Ferme le popup
-});
+    document.getElementById('cancel-logout').addEventListener('click', function () {
+        document.getElementById('logout-popup').style.display = 'none';  // Ferme le popup
+    });
 </script>
 
+{% block extra_js %}{% endblock %}
 
 </body>
 </html>

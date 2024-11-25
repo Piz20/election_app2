@@ -111,7 +111,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+
+TIME_ZONE = 'Etc/GMT'  # Fuseau horaire du Cameroun (UTC+1)
+
 
 USE_I18N = True
 

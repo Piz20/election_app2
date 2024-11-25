@@ -28,63 +28,99 @@ class CustomUserManager(BaseUserManager):
 
         return self.create_user(email, password, **extra_fields)
 
+
 class CustomUser(AbstractUser):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=255, null=True, blank=True)
     matricule = models.CharField(max_length=100, null=True, blank=True, unique=True)
     gender = models.CharField(max_length=10, choices=[('M', 'Male'), ('F', 'Female')], null=True, blank=True)
-    email = models.EmailField(unique=True, null=False, blank=False)  # Ensure email is required and unique
+    email = models.EmailField(unique=True, null=False, blank=False)
     date_of_birth = models.DateField(null=True, blank=True)
     elections = models.JSONField(null=True, blank=True)
 
-    # Champ pour la photo de profil
     profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
+
     # Remove username field
     username = None
-
-    # Set email as the primary identifier
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []  # No additional required fields
+    REQUIRED_FIELDS = []
 
     objects = CustomUserManager()
 
     def __str__(self):
         return self.email or "User without email"
 
-# Validator pour garantir l'unicité du nom de l'élection
-def validate_unique_election_name(value):
-    if Election.objects.filter(name=value).exists():
-        raise ValidationError(f"An election with the name '{value}' already exists.")
 
-# Validator pour garantir que les dates ne sont pas dans le passé
 def validate_future_date(value):
+    """Validation to ensure date is not in the past."""
     if value < timezone.now():
         raise ValidationError("The date cannot be in the past.")
 
+
 class Election(models.Model):
-    # ID de l'élection, Django gère automatiquement un champ id unique.
     id = models.AutoField(primary_key=True)
-
-    # Nom de l'élection, avec un validateur d'unicité
-    name = models.CharField(max_length=255, validators=[validate_unique_election_name])
-
-    # Description obligatoire
+    name = models.CharField(max_length=255, unique=True, validators=[MaxLengthValidator(255)])
     description = models.TextField(validators=[MaxLengthValidator(1000)], null=False, blank=False)
-
-    # Date et heure de début de l'élection, avec un validateur pour l'avenir
     start_date = models.DateTimeField(validators=[validate_future_date])
-
-    # Date et heure de fin de l'élection, avec un validateur pour l'avenir
     end_date = models.DateTimeField(validators=[validate_future_date])
+    voters = models.ManyToManyField(CustomUser, related_name='voted_elections', blank=True)
+    winner = models.ForeignKey(
+        'Candidate',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='elections_won'
+    )
 
-    # Liste des électeurs (nullable)
-    voters = models.TextField(null=True, blank=True)
+    def clean(self):
+        """Ensure start_date is before end_date."""
+        if self.start_date >= self.end_date:
+            raise ValidationError("The start date must be before the end date.")
 
-    # Liste des candidats (nullable)
-    candidates = models.TextField(null=True, blank=True)
-
-    # Vainqueur (nullable)
-    winner = models.CharField(max_length=255, null=True, blank=True)
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(start_date__lt=models.F("end_date")),
+                name="check_start_date_before_end_date"
+            ),
+        ]
+
+
+class Candidate(models.Model):
+    id = models.AutoField(primary_key=True)
+    election = models.ForeignKey(
+        Election,
+        on_delete=models.CASCADE,
+        related_name='candidates'  # Reverse relationship accessible via `election.candidates`
+    )
+    name = models.CharField(max_length=255)
+    bio = models.TextField(max_length=1000, null=False, blank=False)
+    vote_count = models.IntegerField(default=0)
+    profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.name} - {self.election.name}"
+
+
+class Vote(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE)
+
+    def clean(self):
+        """Ensure a user can vote only once per election."""
+        if Vote.objects.filter(user=self.user, candidate__election=self.candidate.election).exists():
+            raise ValidationError("You have already voted in this election.")
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.user.email} -> {self.candidate.name}"

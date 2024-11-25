@@ -1,15 +1,18 @@
 # election_app/views.py
+import json
+
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 
-from .forms import CustomUserRegistrationForm, LoginForm, ProfilePictureForm, ElectionForm
+from .forms import CustomUserRegistrationForm, LoginForm, ProfilePictureForm, ElectionForm, CandidateForm
 
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 
-from .models import Election
+from .models import Election, Candidate, CustomUser, Vote
 
 
 # Décorateur pour vérifier que l'utilisateur n'est pas connecté
@@ -35,7 +38,7 @@ def register_view(request):
             user.set_password(form.cleaned_data["password"])  # Hash le mot de passe
             user.save()
             messages.success(request, "Registration successful. You can now log in.")
-            return redirect('elections')
+            return redirect('login')
         else:
             # Messages d'erreurs ajoutés automatiquement par le formulaire
             messages.error(request, "There were errors in your form.")
@@ -95,20 +98,26 @@ def profile_view(request):
     })
 
 
+@login_required
 def elections_view(request):
     # Récupérer toutes les élections
     elections = Election.objects.all()
 
-    # Séparer les élections en "Upcoming" et "Other"
-    upcoming_elections = elections.filter(start_date__gte=timezone.now()).order_by('start_date')
-    past_elections = elections.filter(end_date__lt=timezone.now()).order_by('end_date')
+    # Récupérer l'heure actuelle
+    current_time = timezone.localtime(timezone.now())  # Heure locale (avec fuseau horaire du Cameroun, si configuré)
+
+    # Séparer les élections en "Upcoming" et "Past"
+    upcoming_elections = elections.filter(end_date__gt=current_time).order_by('start_date')
+    past_elections = elections.filter(end_date__lt=current_time).order_by('-end_date')
 
     return render(request, 'election_app/elections.html', {
         'upcoming_elections': upcoming_elections,
         'past_elections': past_elections,
+        'current_time': current_time,
     })
 
 
+@login_required
 def create_election_view(request):
     if request.method == 'POST':
         form = ElectionForm(request.POST)
@@ -142,12 +151,45 @@ def create_election_view(request):
     return render(request, 'election_app/elections.html', {'form': form})
 
 
+@login_required
 def election_details_view(request, election_id):
-    # Récupérer l'élection spécifique ou retourner une erreur 404 si non trouvée
+    # Récupérer l'élection ou retourner une erreur 404 si non trouvée
     election = get_object_or_404(Election, id=election_id)
 
+    # Récupérer les candidats liés à l'élection
+    candidates = Candidate.objects.filter(election=election)
+
+    # Obtenir la date et l'heure actuelles
+    current_time = timezone.localtime(timezone.now())  # Heure locale (avec fuseau horaire du Cameroun, si configuré)
+
     # Transmettre les données à la vue
-    return render(request, 'election_app/election_details.html', {'election': election})
+    context = {
+        'election': election,
+        'candidates': candidates,
+        'now': current_time,  # Ajouter l'heure actuelle au contexte
+    }
+    return render(request, 'election_app/election_details.html', context)
+
+
+@login_required
+def add_candidate_view(request, election_id):
+    election = get_object_or_404(Election, id=election_id)
+
+    if request.method == 'POST':
+        form = CandidateForm(request.POST, request.FILES, election=election)  # Passer l'élection au formulaire
+        if form.is_valid():
+            candidate = form.save(commit=False)
+            candidate.election = election  # Associer l'élection
+            candidate.save()  # Sauvegarder le candidat
+            return JsonResponse({"success": True, "message": "Candidate added successfully!"})
+        else:
+            # Affichage des erreurs dans la console
+            print(f"Errors: {form.errors}")
+            return JsonResponse(
+                {"success": False, "errors": form.errors, "message": "Please correct the errors in the form."})
+    else:
+        return JsonResponse({"success": False, "message": "Invalid request method."})
+
 
 
 def about_view(request):

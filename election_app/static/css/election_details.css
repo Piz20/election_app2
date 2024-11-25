@@ -1,82 +1,251 @@
-/* Section Détails de l'élection */
+/* Countdown Timer Container */
+.countdown-container {
+    text-align: center;
+    padding: 20px;
+    background-color: #001124;
+    color: white;
+    margin-bottom: 0;
+    border: none;
+    z-index: 100;
+}
+
+#countdown-title {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.countdown-timer {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* Main container */
 .container {
     width: 100%;
-    height: auto;
+    min-height: 100vh;
     margin: 0 auto;
-    padding: 0 -50px;
-    text-align: center; /* Centrer le texte horizontalement */
+    padding: 20px;
     font-family: 'DM Serif Display', serif;
     background: #001124;
     color: white;
+    position: relative;
+    overflow-y: auto;
     display: flex;
-    flex-direction: column; /* Organiser les éléments de haut en bas */
-    justify-content: center; /* Centrer verticalement */
-    align-items: center; /* Centrer horizontalement */
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
 }
 
-
-.election-description {
-    font-size: 18px;
-    margin: 15px 0;
+/* Section Candidates */
+.section-candidates {
+    margin: 20px 0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
 }
 
-.election-date {
-    font-size: 16px;
-    color: gray;
+/* Add Candidate button styles */
+.add-candidate-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: background-color 0.3s ease;
 }
 
-/* Liste des candidats */
+.add-candidate-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Candidates list container */
 .candidates-list {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
+    width: 100%;
+    margin-top: 20px;
 }
 
-/* Carte de chaque candidat */
+/* Candidate card styling */
 .candidate-card {
-    width: 250px;
-    background: #C4C4C4;
+    width: 300px;
+    background: #f8f9fa;
     border-radius: 10px;
     padding: 20px;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
+.candidate-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+}
+
+/* Candidate photo styling */
 .candidate-photo img {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     object-fit: cover;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
+/* Candidate info */
 .candidate-info {
     margin-bottom: 15px;
 }
 
 .candidate-name {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: bold;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
+    color: #212529;
 }
 
 .candidate-bio {
-    font-size: 14px;
-    color: gray;
+    font-size: 16px;
+    color: #6c757d;
+    line-height: 1.5;
+}
+.candidate-votes {
+    font-weight: bold;
+    color: #333;
+    margin-top: 5px;
 }
 
-/* Bouton de vote */
+/* Vote button */
 .vote-btn {
-    background-color: green;
+    background-color: #28a745;
     color: white;
-    padding: 10px 15px;
+    padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    margin-top: 10px;
 }
 
 .vote-btn:hover {
-    background-color: darkgreen;
+    background-color: #218838;
+}
+
+/* Modal container */
+.modal-election {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding-top: 60px;
+}
+
+/* Modal content */
+.modal-content-election {
+    background-color: #001124;
+    margin: 5% auto;
+    padding: 40px;
+    border: 1px solid #888;
+    width: 70%;
+    max-width: 600px;
+    color: white;
+    border-radius: 8px;
+}
+
+/* Close button */
+.close-election {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-election:hover,
+.close-election:focus {
+    color: red;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Form styles */
+.modal-form-election input,
+.modal-form-election textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+}
+
+.modal-form-election button {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.modal-form-election button:hover {
+    background-color: #45a049;
+}
+
+/* Error message styles */
+.error-container {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+/* Photo upload styles */
+.photo-upload-container {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.photo-preview {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 15px;
+    border: 2px solid #ccc;
+}
+
+.photo-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.photo-upload-btn {
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.photo-upload-btn:hover {
+    background-color: #45a049;
 }
