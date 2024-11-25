@@ -105,9 +105,11 @@
 
     <script>
         const formActionUrl = "{% url 'add_candidate' election.id %}";
-        const electionStartDateData = "{{ election.start_date|date:'Y-m-d H:i:s' }}";
-        const electionEndDateData = "{{ election.end_date|date:'Y-m-d H:i:s' }}";
+         // Inclure les dates dans le HTML pour utilisation dans le JavaScript
+    const electionStartDate = new Date("{{ election.start_date|date:'Y-m-d H:i:s' }}");
+    const electionEndDate = new Date("{{ election.end_date|date:'Y-m-d H:i:s' }}");
     </script>
-    <script src="{% static 'js/election_details.js' %}"></script>
+    
+    <script src="{% static 'js/election_details.js' %}" defer></script>
 
 {% endblock %}
