@@ -39,14 +39,13 @@ class ProfilePictureForm(forms.ModelForm):
 class ElectionForm(forms.ModelForm):
     class Meta:
         model = Election
-        fields = ['name', 'description', 'start_date', 'end_date', 'voters', 'winner']
+        fields = ['name', 'description', 'start_date', 'end_date', 'voters']  # Removed 'winner'
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
             'start_date': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
             'end_date': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
             'voters': forms.SelectMultiple(attrs={'class': 'form-control'}),
-            'winner': forms.Select(attrs={'class': 'form-control'}),
         }
 
     def clean_name(self):

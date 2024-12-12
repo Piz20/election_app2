@@ -3,6 +3,7 @@ import json
 
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.db.models import Max
 from django.http import JsonResponse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
@@ -158,18 +159,32 @@ def election_details_view(request, election_id):
 
     # Obtenir les votes de l'utilisateur pour cette élection
     existing_votes = Vote.objects.filter(user=request.user, candidate__election=election)
-
-    # Créer un dictionnaire indiquant si l'utilisateur a voté pour un candidat
     has_voted = {vote.candidate.id: True for vote in existing_votes}
+
+    # Trouver les candidats avec le plus grand nombre de votes
+    ordered_candidates = candidates.annotate(max_votes=Max('vote_count')).order_by('-max_votes')
+
+    # Get the number of winners to display (you can change this to any value)
+    n = 3  # For example, display top 3 winners
+
+    # Select the top n candidates who have votes greater than 0
+    winners = []
+    for candidate in ordered_candidates:
+        if candidate.vote_count > 0:
+            winners.append(candidate)
+        if len(winners) == n:  # Stop once we have n winners
+            break
 
     context = {
         'election': election,
         'candidates': candidates,
         'now': timezone.localtime(timezone.now()),
-        'has_voted': has_voted,  # Passer les informations sur les votes existants
+        'has_voted': has_voted,
+        'winners': winners,  # List of top n winners
     }
 
     return render(request, 'election_app/election_details.html', context)
+
 
 @login_required
 def add_candidate_view(request, election_id):
@@ -194,7 +209,6 @@ def vote_view(request, election_id, candidate_id):
     """
     Handles the voting process for an election.
     """
-
     # Retrieve the election using the ID from the URL
     election = get_object_or_404(Election, id=election_id)
 
@@ -204,12 +218,6 @@ def vote_view(request, election_id, candidate_id):
     # Check if the user has already voted in this election
     existing_vote = Vote.objects.filter(user=request.user, candidate__election=election).first()
 
-    # Pass the previous candidate name if the user has already voted
-    previous_candidate_name = None
-    if existing_vote:
-        previous_candidate_name = existing_vote.candidate.name  # Adjust according to your model field
-
-    # Your voting logic as before
 
     if request.method == 'POST':
         try:
@@ -218,7 +226,7 @@ def vote_view(request, election_id, candidate_id):
                 previous_candidate = existing_vote.candidate
 
                 if previous_candidate != candidate:
-                    # If the user is changing their vote, decrease the vote count of the previous candidate
+                    # If the user is changing their vote, update the vote counts
                     previous_candidate.vote_count -= 1
                     previous_candidate.save()
 
@@ -226,14 +234,19 @@ def vote_view(request, election_id, candidate_id):
                     existing_vote.candidate = candidate
                     existing_vote.save()
 
-                    # Increase the vote count of the new candidate
                     candidate.vote_count += 1
                     candidate.save()
 
-                    return JsonResponse({'success': True, 'message': 'Your vote has been updated successfully.'})
+                    return JsonResponse({
+                        'success': True,
+                        'message': 'Your vote has been updated successfully.',
+                    })
                 else:
                     # If the user selected the same candidate, no changes to vote count
-                    return JsonResponse({'success': True, 'message': 'You have already voted for this candidate.'})
+                    return JsonResponse({
+                        'success': True,
+                        'message': 'You have already voted for this candidate.',
+                    })
 
             else:
                 # If the user hasn't voted, create a new vote
@@ -243,20 +256,24 @@ def vote_view(request, election_id, candidate_id):
                 candidate.vote_count += 1
                 candidate.save()
 
-                return JsonResponse({'success': True, 'message': 'Your vote has been recorded successfully.'})
+                return JsonResponse({
+                    'success': True,
+                    'message': 'Your vote has been recorded successfully.',
+                })
 
         except Exception as e:
-            # Clean up the error message to remove any unwanted characters like quotes or brackets
+            # Handle any errors and return a clean error message
             error_message = str(e).replace("'", "").replace("[", "").replace("]", "")
 
-            # Capture and return the cleaned error message
-            return JsonResponse({'success': False, 'error': error_message}, status=400)
+            return JsonResponse({
+                'success': False,
+                'error': error_message,
+            }, status=400)
 
-    # Pass the previous candidate name to the template context
+    # Pass the previous candidate name to the template context for GET requests
     return render(request, 'election_app/election_details.html', {
         'election': election,
         'candidate': candidate,
-        'previous_candidate_name': previous_candidate_name,  # Include the previous candidate's name
     })
 
 

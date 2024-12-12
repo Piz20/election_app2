@@ -72,7 +72,11 @@
 
 .card-status {
     font-size: 25px;
-
+    font-weight: bold;
+    position: absolute; /* Positionnement absolu */
+    left: 40%; /* Positionner à 40% de la largeur de la carte */
+    top: 50%;
+    transform: translateY(-50%); /* Centrer verticalement */
     .status-not-began {
         color: green;
         font-weight: bold;

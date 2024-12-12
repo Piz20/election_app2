@@ -21,13 +21,48 @@
             <!-- Section for displaying candidates -->
             <section class="section-candidates">
                 <h2 class="section-title">Candidates</h2>
-                <button class="add-candidate-btn" id="addCandidateBtn" onclick="openModalCandidate()">Add Candidate
-                </button>
+                {% if now <= election.end_date %}
+                    <button class="add-candidate-btn" id="addCandidateBtn" onclick="openModalCandidate()">Add
+                        Candidate
+                    </button>
+                {% endif %}
+               <div class="winner-container">
+    {% if now < election.end_date %}
+        <h2 class="winner-title">Provisional Winners</h2>
+    {% else %}
+        <h2 class="winner-title">Final Winners</h2>
+    {% endif %}
+    
+    {% if winners %}
+        <div class="winners-list">
+            {% for winner in winners %}
+                <div class="winner-card">
+                    <div class="winner-photo">
+                        {% if winner.profile_picture %}
+                            <img src="{{ winner.profile_picture.url }}"
+                                 alt="Photo of {{ winner.name }}">
+                        {% else %}
+                            <img src="{% static 'images/default_profile_pic.png' %}"
+                                 alt="Photo of {{ winner.name }}">
+                        {% endif %}
+                    </div>
+                    <div class="winner-info">
+                        <h3>{{ winner.name }}</h3>
+                        <p>Votes: {{ winner.vote_count }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No winners yet.</p>
+    {% endif %}
+</div>
 
                 {% if candidates %}
                     <div class="candidates-list" id="candidatesList">
                         {% for candidate in candidates %}
-                            <div class="candidate-card" id="candidate-card-{{ candidate.id }}">
+                            <div class="candidate-card {% if has_voted|get_item:candidate.id %}voted-candidate{% endif %}"
+                                 id="candidate-card-{{ candidate.id }}">
                                 <div class="candidate-photo">
                                     {% if candidate.profile_picture %}
                                         <img src="{{ candidate.profile_picture.url }}"
@@ -54,17 +89,26 @@
                                     </button>
                                 {% else %}
                                     <!-- If the user has not voted yet -->
-                                    <button class="vote-btn" data-candidate-id="{{ candidate.id }}"
-                                            onclick="confirmVote(this)">Vote
-                                    </button>
+                                    {% if now < election.end_date %}
+                                        <button
+                                                class="vote-btn"
+                                                data-candidate-id="{{ candidate.id }}"
+                                                data-candidate-name="{{ candidate.name }}"
+                                                onclick="confirmVote(this)">
+                                            Vote for {{ candidate.name }}
+                                        </button>
+                                    {% else %}
+                                        <p>The election has ended. Voting is no longer available.</p>
+                                    {% endif %}
                                 {% endif %}
+
                             </div>
                         {% endfor %}
                     </div>
-
                 {% else %}
                     <p>No candidates available for this election.</p>
                 {% endif %}
+
             </section>
         </main>
     </div>
@@ -82,6 +126,13 @@
                 <div class="photo-upload-container">
                     <div class="photo-preview" id="photoPreview">
                         <img id="photoPreviewImage" src="
+                                
+                                
+                                
+                                
+                                
+                                
+                                
                                 {% if form.profile_picture.value %}{{ form.profile_picture.value }}{% else %}{% static 'images/default_profile_pic.png' %}{% endif %}"
                              alt="Candidate Photo">
                     </div>
@@ -113,8 +164,6 @@
         const formActionUrl = "{% url 'add_candidate' election.id %}";
         window.electionId = "{{ election.id }}";  // Injecter l'ID de l'élection
         <!-- Passer la variable previous_candidate_name à JavaScript -->
-        // Passer le nom du précédent candidat au JavaScript
-        var previousCandidateName = "{{ previous_candidate_name|escapejs }}";
 
         // Inclure les dates dans le HTML pour utilisation dans le JavaScript
         const electionStartDate = new Date("{{ election.start_date|date:'Y-m-d H:i:s' }}");

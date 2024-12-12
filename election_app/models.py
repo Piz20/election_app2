@@ -64,13 +64,6 @@ class Election(models.Model):
     start_date = models.DateTimeField(validators=[validate_future_date])
     end_date = models.DateTimeField(validators=[validate_future_date])
     voters = models.ManyToManyField(CustomUser, related_name='voted_elections', blank=True)
-    winner = models.ForeignKey(
-        'Candidate',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='elections_won'
-    )
 
     def clean(self):
         """Ensure start_date is before end_date."""
@@ -91,7 +84,6 @@ class Election(models.Model):
                 name="check_start_date_before_end_date"
             ),
         ]
-
 
 class Candidate(models.Model):
     id = models.AutoField(primary_key=True)

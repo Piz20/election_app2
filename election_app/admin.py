@@ -25,7 +25,7 @@ class CustomUserAdmin(UserAdmin):
 # Election Admin
 class ElectionAdmin(admin.ModelAdmin):
     model = Election
-    list_display = ('name', 'start_date', 'end_date', 'winner')
+    list_display = ('name', 'start_date', 'end_date',)
     search_fields = ('name',)
     list_filter = ('start_date', 'end_date')
     ordering = ('start_date',)

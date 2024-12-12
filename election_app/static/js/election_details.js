@@ -1,7 +1,6 @@
 // election_details.js
 
 
-
 const countdownTitle = document.getElementById('countdown-title');
 const countdownTimer = document.getElementById('countdown-timer');
 
@@ -54,10 +53,10 @@ function updateCountdown() {
 setInterval(updateCountdown, 1000);
 updateCountdown(); // Initialiser immédiatement le compte à rebours
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('createCandidateForm');
 
-    form.addEventListener('submit', function(event) {
+    form.addEventListener('submit', function (event) {
         event.preventDefault(); // Empêcher la soumission traditionnelle du formulaire
 
         const formData = new FormData(form);
@@ -70,57 +69,57 @@ document.addEventListener('DOMContentLoaded', function() {
                 'X-CSRFToken': document.querySelector('[name="csrfmiddlewaretoken"]').value, // Ajout du token CSRF
             },
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Affiche un message de succès si la soumission est réussie
-                Swal.fire({
-                    title: 'Success!',
-                    text: 'Candidate added successfully!',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                }).then(() => {
-                    // Rafraîchissez la page ou la section des candidats
-                    location.reload(); // Cela recharge la page complète
-                });
-            } else {
-                // Si la soumission échoue, affiche un message d'erreur
-                if (data.errors) {
-                    // Loop through the form errors and display them
-                    Object.keys(data.errors).forEach(field => {
-                        const errorContainer = document.getElementById(`error-${field}`);
-                        if (errorContainer) {
-                            // Display the error message in the corresponding field
-                            errorContainer.textContent = data.errors[field].join(", ");
-                        }
-                    });
-
-                    // General error message (if any)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Affiche un message de succès si la soumission est réussie
                     Swal.fire({
-                        title: 'Error!',
-                        text: data.message || 'There was an issue adding the candidate.',
-                        icon: 'error',
+                        title: 'Success!',
+                        text: 'Candidate added successfully!',
+                        icon: 'success',
                         confirmButtonText: 'OK'
+                    }).then(() => {
+                        // Rafraîchissez la page ou la section des candidats
+                        location.reload(); // Cela recharge la page complète
                     });
                 } else {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'An unexpected error occurred.',
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
+                    // Si la soumission échoue, affiche un message d'erreur
+                    if (data.errors) {
+                        // Loop through the form errors and display them
+                        Object.keys(data.errors).forEach(field => {
+                            const errorContainer = document.getElementById(`error-${field}`);
+                            if (errorContainer) {
+                                // Display the error message in the corresponding field
+                                errorContainer.textContent = data.errors[field].join(", ");
+                            }
+                        });
+
+                        // General error message (if any)
+                        Swal.fire({
+                            title: 'Error!',
+                            text: data.message || 'There was an issue adding the candidate.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'An unexpected error occurred.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
                 }
-            }
-        })
-        .catch(error => {
-            // En cas d'erreur de réseau ou d'autre problème
-            Swal.fire({
-                title: 'Error!',
-                text: 'An unexpected error occurred.',
-                icon: 'error',
-                confirmButtonText: 'OK'
+            })
+            .catch(error => {
+                // En cas d'erreur de réseau ou d'autre problème
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'An unexpected error occurred.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
             });
-        });
     });
 });
 
@@ -134,7 +133,7 @@ function previewPhoto(event) {
     if (file) {
         const reader = new FileReader();
 
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             photoPreviewImage.src = e.target.result;
             photoPreviewImage.style.display = 'block'; // Show the preview
         }
@@ -165,7 +164,7 @@ function closeModalCandidate() {
 }
 
 // Close modal when clicking outside the modal content
-window.onclick = function(event) {
+window.onclick = function (event) {
     const modal = document.getElementById('candidateModal');
     // Check if the click is outside the modal content
     if (event.target === modal) {
@@ -175,13 +174,13 @@ window.onclick = function(event) {
 
 // Function to show confirmation dialog
 function confirmVote(button) {
-    const candidateId = button.getAttribute('data-candidate-id');
+    const candidateId = button.getAttribute('data-candidate-id'); // Récupère l'ID du candidat cliqué
+    const candidateName = button.getAttribute('data-candidate-name'); // Récupère le nom du candidat cliqué
 
-    let confirmationText = 'You can modify your choice until the end of the election.';
+    // Base confirmation text
+    let confirmationText = `You are about to vote for ${candidateName}. You can modify your choice until the end of the election.`;
 
-    if (previousCandidateName) {
-        confirmationText = `You have already voted for ${previousCandidateName}. ${confirmationText}`;
-    }
+
 
     // Show SweetAlert2 confirmation dialog
     Swal.fire({
@@ -215,40 +214,45 @@ function voteForCandidate(candidateId) {
             'Content-Type': 'application/json',
             'X-CSRFToken': csrfToken
         },
-        body: JSON.stringify({ candidate_id: candidateId })
+        body: JSON.stringify({candidate_id: candidateId})
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // If the vote is successfully recorded
-            Swal.fire(
-                'Success!',
-                data.message || 'Your vote has been successfully recorded.',
-                'success'
-            );
-        } else if (data.error) {
-            // If a specific error is returned from the backend
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // If the vote is successfully recorded
+                Swal.fire(
+                    'Success!',
+                    data.message || 'Your vote has been successfully recorded.',
+                    'success'
+                ).then((result) => {
+                    if (result.isConfirmed) {
+                        // Reload the page after clicking "OK"
+                        location.reload();
+                    }
+                });
+            } else if (data.error) {
+                // If a specific error is returned from the backend
+                Swal.fire(
+                    'Error!',
+                    data.error, // Display the error message returned by the backend
+                    'error'
+                );
+            } else {
+                // If a general error occurs
+                Swal.fire(
+                    'Error!',
+                    'There was an error submitting your vote. Please try again later.',
+                    'error'
+                );
+            }
+        })
+        .catch(error => {
+            // Handle unexpected errors
             Swal.fire(
                 'Error!',
-                data.error, // Display the error message returned by the backend
+                'An unexpected error occurred. Please try again.',
                 'error'
             );
-        } else {
-            // If a general error occurs
-            Swal.fire(
-                'Error!',
-                'There was an error submitting your vote. Please try again later.',
-                'error'
-            );
-        }
-    })
-    .catch(error => {
-        // Handle unexpected errors
-        Swal.fire(
-            'Error!',
-            'An unexpected error occurred. Please try again.',
-            'error'
-        );
-        console.error('Unexpected error:', error);
-    });
+            console.error('Unexpected error:', error);
+        });
 }

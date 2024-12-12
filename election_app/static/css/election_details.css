@@ -88,10 +88,13 @@
     align-items: center;
 }
 
+/* Effet de hover pour les cartes des candidats */
 .candidate-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Ombre plus prononcée */
+    opacity: 0.8; /* Légère transparence */
     cursor: pointer;
+    transition: all 0.3s ease; /* Transition fluide */
 }
 
 /* Candidate photo styling */
@@ -249,3 +252,38 @@
 .photo-upload-btn:hover {
     background-color: #45a049;
 }
+.voted-candidate {
+    background-color: #ccffcc; /* Fond vert clair */
+        border: 2px solid #00cc00; /* Bordure verte */
+
+    transition: all 0.3s ease; /* Animation pour un effet plus fluide */
+}
+.winners-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-evenly; /* Space out the winner cards */
+        gap: 20px; /* Optional: adds space between the cards */
+    }
+
+    .winner-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 150px; /* Adjust the width to your preference */
+        border: 1px solid #ccc; /* Optional: adds a border to the cards */
+        padding: 10px;
+        border-radius: 8px;
+        text-align: center;
+        background-color: white;
+        color: black;
+    }
+
+    .winner-photo img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+    }
+
+    .winner-info {
+        margin-top: 10px;
+    }
