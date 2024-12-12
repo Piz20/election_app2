@@ -256,3 +256,57 @@ function voteForCandidate(candidateId) {
             console.error('Unexpected error:', error);
         });
 }
+
+// Fonction pour récupérer le token CSRF depuis les cookies
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Function to handle vote removal
+function removeVote(button) {
+    var candidateId = button.getAttribute('data-candidate-id');
+    var csrfToken = getCookie('csrftoken');  // Get the CSRF token from the cookies
+
+    // Check if the CSRF token is defined
+    if (!csrfToken) {
+        Swal.fire('Error', 'CSRF token is missing', 'error');
+        return;
+    }
+
+    fetch('/remove_vote/' + candidateId + '/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken  // Include the CSRF token in the headers
+        },
+        body: JSON.stringify({ 'candidate_id': candidateId })  // Send the candidate ID in the request body
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Display a success message with SweetAlert if the operation is successful
+            Swal.fire('Success', data.message, 'success')
+                .then(() => {
+                    location.reload();  // Reload the page to reflect the updated vote count
+                });
+        } else {
+            // Display an error message with SweetAlert if the operation fails
+            Swal.fire('Error', data.message, 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire('Error', 'An error occurred while removing the vote', 'error');
+    });
+}

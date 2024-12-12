@@ -20,6 +20,7 @@ from django.urls import path
 from django.conf import settings
 
 from . import views
+from .views import remove_vote_view
 
 urlpatterns = [
 
@@ -47,5 +48,7 @@ urlpatterns = [
                   path('election/<int:election_id>/', views.election_details_view, name='election_details'),
                   path('election/<int:election_id>/add-candidate/', views.add_candidate_view, name='add_candidate'),
                   path('election/<int:election_id>/vote/<int:candidate_id>/', views.vote_view, name='vote'),
+path('remove_vote/<int:candidate_id>/', remove_vote_view, name='remove_vote'),
+
                   path('help/', views.help_view, name='help'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

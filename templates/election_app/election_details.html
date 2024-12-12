@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="{% static 'css/election_details.css' %}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <meta name="csrf-token" content="{{ csrf_token }}">
+
 {% endblock %}
 
 {% block content %}
@@ -26,37 +28,38 @@
                         Candidate
                     </button>
                 {% endif %}
-               <div class="winner-container">
-    {% if now < election.end_date %}
-        <h2 class="winner-title">Provisional Winners</h2>
-    {% else %}
-        <h2 class="winner-title">Final Winners</h2>
-    {% endif %}
-    
-    {% if winners %}
-        <div class="winners-list">
-            {% for winner in winners %}
-                <div class="winner-card">
-                    <div class="winner-photo">
-                        {% if winner.profile_picture %}
-                            <img src="{{ winner.profile_picture.url }}"
-                                 alt="Photo of {{ winner.name }}">
-                        {% else %}
-                            <img src="{% static 'images/default_profile_pic.png' %}"
-                                 alt="Photo of {{ winner.name }}">
-                        {% endif %}
-                    </div>
-                    <div class="winner-info">
-                        <h3>{{ winner.name }}</h3>
-                        <p>Votes: {{ winner.vote_count }}</p>
-                    </div>
+
+                <div class="winner-container">
+                    {% if now < election.end_date %}
+                        <h2 class="winner-title">Provisional Winners</h2>
+                    {% else %}
+                        <h2 class="winner-title">Final Winners</h2>
+                    {% endif %}
+
+                    {% if winners %}
+                        <div class="winners-list">
+                            {% for winner in winners %}
+                                <div class="winner-card">
+                                    <div class="winner-photo">
+                                        {% if winner.profile_picture %}
+                                            <img src="{{ winner.profile_picture.url }}"
+                                                 alt="Photo of {{ winner.name }}">
+                                        {% else %}
+                                            <img src="{% static 'images/default_profile_pic.png' %}"
+                                                 alt="Photo of {{ winner.name }}">
+                                        {% endif %}
+                                    </div>
+                                    <div class="winner-info">
+                                        <h3>{{ winner.name }}</h3>
+                                        <p>Votes: {{ winner.vote_count }}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p>No winners yet.</p>
+                    {% endif %}
                 </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <p>No winners yet.</p>
-    {% endif %}
-</div>
 
                 {% if candidates %}
                     <div class="candidates-list" id="candidatesList">
@@ -87,11 +90,14 @@
                                     <!-- If the user has already voted for this candidate -->
                                     <button class="vote-btn" style="display:none;">You have voted for this candidate
                                     </button>
+                                    <button class="remove-vote-btn" data-candidate-id="{{ candidate.id }}"
+                                            data-candidate-name="{{ candidate.name }}" onclick="removeVote(this)">Remove
+                                        vote for {{ candidate.name }}</button>
+
                                 {% else %}
                                     <!-- If the user has not voted yet -->
                                     {% if now < election.end_date %}
-                                        <button
-                                                class="vote-btn"
+                                        <button class="vote-btn"
                                                 data-candidate-id="{{ candidate.id }}"
                                                 data-candidate-name="{{ candidate.name }}"
                                                 onclick="confirmVote(this)">
@@ -101,7 +107,6 @@
                                         <p>The election has ended. Voting is no longer available.</p>
                                     {% endif %}
                                 {% endif %}
-
                             </div>
                         {% endfor %}
                     </div>
@@ -120,17 +125,11 @@
             <h2>Create Candidate</h2>
             <form class="modal-form-election" id="createCandidateForm" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-
                 <!-- Candidate Photo -->
                 <label for="profile_picture">Candidate Photo:</label>
                 <div class="photo-upload-container">
                     <div class="photo-preview" id="photoPreview">
                         <img id="photoPreviewImage" src="
-                                
-                                
-                                
-                                
-                                
                                 
                                 
                                 {% if form.profile_picture.value %}{{ form.profile_picture.value }}{% else %}{% static 'images/default_profile_pic.png' %}{% endif %}"
@@ -159,7 +158,6 @@
             </form>
         </div>
     </div>
-
     <script>
         const formActionUrl = "{% url 'add_candidate' election.id %}";
         window.electionId = "{{ election.id }}";  // Injecter l'ID de l'élection

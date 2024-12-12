@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Max
 from django.http import JsonResponse
 from django.utils import timezone
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 from .forms import CustomUserRegistrationForm, LoginForm, ProfilePictureForm, ElectionForm, CandidateForm
 
@@ -151,7 +151,6 @@ def create_election_view(request):
 
     return render(request, 'election_app/elections.html', {'form': form})
 
-
 @login_required
 def election_details_view(request, election_id):
     election = get_object_or_404(Election, id=election_id)
@@ -185,6 +184,28 @@ def election_details_view(request, election_id):
 
     return render(request, 'election_app/election_details.html', context)
 
+@csrf_protect
+def remove_vote_view(request, candidate_id):
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return JsonResponse({'success': False, 'message': 'You must be logged in to vote.'}, status=403)
+
+        try:
+            candidate = Candidate.objects.get(id=candidate_id)
+            vote = Vote.objects.filter(user=request.user, candidate=candidate).first()
+
+            if vote:
+                vote.delete()  # Remove the vote
+                candidate.vote_count -= 1  # Decrement the vote count
+                candidate.save()  # Save the update
+                return JsonResponse({'success': True, 'message': 'Vote successfully removed.'})
+            else:
+                return JsonResponse({'success': False, 'message': 'You have not voted for this candidate.'})
+
+        except Candidate.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Candidate not found.'}, status=404)
+
+    return JsonResponse({'success': False, 'message': 'Invalid request.'}, status=400)
 
 @login_required
 def add_candidate_view(request, election_id):

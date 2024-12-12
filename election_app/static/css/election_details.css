@@ -287,3 +287,16 @@
     .winner-info {
         margin-top: 10px;
     }
+
+.remove-vote-btn {
+    background-color: #f44336; /* Red background */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.remove-vote-btn:hover {
+    background-color: #d32f2f;
+}
