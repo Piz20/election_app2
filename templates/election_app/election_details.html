@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{% static 'css/election_details.css' %}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <meta name="csrf-token" content="{{ csrf_token }}">
+    <meta name="csrf-token" content="{{ csrf_token }}">
 
 {% endblock %}
 
@@ -90,10 +90,12 @@
                                     <!-- If the user has already voted for this candidate -->
                                     <button class="vote-btn" style="display:none;">You have voted for this candidate
                                     </button>
-                                    <button class="remove-vote-btn" data-candidate-id="{{ candidate.id }}"
-                                            data-candidate-name="{{ candidate.name }}" onclick="removeVote(this)">Remove
-                                        vote for {{ candidate.name }}</button>
-
+                                    {% if now < election.end_date %}
+                                        <button class="remove-vote-btn" data-candidate-id="{{ candidate.id }}"
+                                                data-candidate-name="{{ candidate.name }}" onclick="removeVote(this)">
+                                            Remove
+                                            vote for {{ candidate.name }}</button>
+                                    {% endif %}
                                 {% else %}
                                     <!-- If the user has not voted yet -->
                                     {% if now < election.end_date %}
@@ -130,6 +132,7 @@
                 <div class="photo-upload-container">
                     <div class="photo-preview" id="photoPreview">
                         <img id="photoPreviewImage" src="
+                                
                                 
                                 
                                 {% if form.profile_picture.value %}{{ form.profile_picture.value }}{% else %}{% static 'images/default_profile_pic.png' %}{% endif %}"
