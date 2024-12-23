@@ -28,6 +28,16 @@
                         Candidate
                     </button>
                 {% endif %}
+                <div class="search-container">
+                    <input
+                            type="text"
+                            id="candidateSearchBar"
+                            class="search-bar"
+                            placeholder="Search a candidate"
+                            oninput="filterCandidates(this.value)"
+                    />
+                    <button class="add-criteria-btn" onclick="openCriteriaModal()">Add eligibility criterias</button>
+                </div>
 
                 <div class="winner-container">
                     {% if now < election.end_date %}
@@ -132,9 +142,10 @@
                 <div class="photo-upload-container">
                     <div class="photo-preview" id="photoPreview">
                         <img id="photoPreviewImage" src="
-                                
-                                
-                                
+
+
+
+
                                 {% if form.profile_picture.value %}{{ form.profile_picture.value }}{% else %}{% static 'images/default_profile_pic.png' %}{% endif %}"
                              alt="Candidate Photo">
                     </div>
@@ -161,6 +172,22 @@
             </form>
         </div>
     </div>
+<!-- Modal Structure -->
+<div id="criteriaModal" class="criteria-modal">
+    <div class="criteria-modal-content">
+        <span class="criteria-close-btn" onclick="closeCriteriaModal()">&times;</span>
+        <h2 class="criteria-modal-title">Add Eligibility Criteria</h2>
+        <form id="criteriaForm" class="criteria-form">
+            <label for="criteriaInput" class="criteria-label">Criteria:</label>
+            <input type="text" id="criteriaInput" name="criteria" placeholder="Enter criteria" required class="criteria-input">
+            <button type="submit" class="criteria-submit-btn">Add</button>
+        </form>
+    </div>
+</div>
+<!-- Trigger Button -->
+<button class="criteria-add-btn" onclick="openCriteriaModal()">Add Eligibility Criteria</button>
+
+
     <script>
         const formActionUrl = "{% url 'add_candidate' election.id %}";
         window.electionId = "{{ election.id }}";  // Injecter l'ID de l'élection

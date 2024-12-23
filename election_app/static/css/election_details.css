@@ -300,3 +300,116 @@
 .remove-vote-btn:hover {
     background-color: #d32f2f;
 }
+.search-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.search-bar {
+    width: 60%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+.add-criteria-btn {
+    background-color: #013a8c;
+    color: white;
+    border: none;
+    border-radius: 5px; /* Arrondir les coins */
+    padding: 2px 2px;
+    font-size: 16px;
+    cursor: pointer; /* Ajout du curseur pointer */
+    transition: background-color 0.3s ease; /* Animation pour le hover */
+}
+
+.add-criteria-btn:hover {
+    background-color: #0250b4; /* Couleur plus claire au survol */
+}
+/* Modal Styling */
+.criteria-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow: auto;
+}
+
+.criteria-modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 50%;
+    max-width: 400px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
+    text-align: center;
+    position: relative;
+}
+
+.criteria-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: #000;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.criteria-modal-title {
+    margin-bottom: 20px;
+    color: #013a8c;
+}
+
+.criteria-label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 16px;
+    text-align: left;
+    color: #333;
+}
+
+.criteria-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.criteria-submit-btn {
+    background-color: #013a8c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.criteria-submit-btn:hover {
+    background-color: #0250b4;
+}
+
+.criteria-add-btn {
+    background-color: #013a8c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.criteria-add-btn:hover {
+    background-color: #0250b4;
+}
