@@ -1,19 +1,19 @@
 # election_app/views.py
-import json
+import os
 
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Max
 from django.http import JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
-from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.views.decorators.csrf import csrf_protect
+from dotenv import load_dotenv
 
 from .forms import CustomUserRegistrationForm, LoginForm, ProfilePictureForm, ElectionForm, CandidateForm
+from .models import Election, Candidate, Vote
 
-from django.contrib import messages
-from django.shortcuts import render, redirect, get_object_or_404
-
-from .models import Election, Candidate, CustomUser, Vote
 
 
 # Décorateur pour vérifier que l'utilisateur n'est pas connecté
@@ -296,6 +296,7 @@ def vote_view(request, election_id, candidate_id):
         'election': election,
         'candidate': candidate,
     })
+
 
 
 

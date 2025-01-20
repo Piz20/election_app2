@@ -338,30 +338,3 @@ function closeCriteriaModal() {
     modal.style.display = "none";
 }
 
-// Handle Form Submission
-document.getElementById("criteriaForm").addEventListener("submit", function (event) {
-    event.preventDefault();
-    const criteria = document.getElementById("criteriaInput").value;
-
-    if (criteria) {
-        // Add your logic to handle the criteria (e.g., send to the server)
-        console.log("Criteria added:", criteria);
-
-        // Clear input and close modal
-        document.getElementById("criteriaInput").value = "";
-        closeCriteriaModal();
-
-        // Optional: Show a success message
-        alert("Criteria added successfully!");
-    } else {
-        alert("Please enter a criteria!");
-    }
-});
-
-// Close Modal on Background Click
-window.addEventListener("click", function (event) {
-    const modal = document.getElementById("criteriaModal");
-    if (event.target === modal) {
-        closeCriteriaModal();
-    }
-});

@@ -177,13 +177,15 @@
     <div class="criteria-modal-content">
         <span class="criteria-close-btn" onclick="closeCriteriaModal()">&times;</span>
         <h2 class="criteria-modal-title">Add Eligibility Criteria</h2>
-        <form id="criteriaForm" class="criteria-form">
+        <form id="criteriaForm" method="post" action="{% url 'generate_query' %}" class="criteria-form">
+            {% csrf_token %}
             <label for="criteriaInput" class="criteria-label">Criteria:</label>
             <input type="text" id="criteriaInput" name="criteria" placeholder="Enter criteria" required class="criteria-input">
-            <button type="submit" class="criteria-submit-btn">Add</button>
+            <button type="submit" class="criteria-submit-btn">Generate Query</button>
         </form>
     </div>
 </div>
+
 <!-- Trigger Button -->
 <button class="criteria-add-btn" onclick="openCriteriaModal()">Add Eligibility Criteria</button>
 
